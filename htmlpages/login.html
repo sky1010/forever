@@ -41,7 +41,7 @@
                             <a href="./index.html">
                                 <img src="../img/logo.png" alt="">
                             </a>
-                        </div>    
+                        </div>
                     </div>
                     <div class="col-lg-7 col-md-7">
                         <div class="advanced-search">
@@ -164,16 +164,14 @@
                 <div class="col-lg-6 offset-lg-3">
                     <div class="login-form">
                         <h2>Login</h2>
-                        <form action="#">
+                        <form action="#" id="form_login">
                             <div class="group-input">
-                                <label for="username">Username or email address *</label>
-                                <input type="text" id="username">
+                                <input type="text" name = "username" id="username" placeholder="Username" data-type="username" data-error="Invalid username">
                             </div>
                             <div class="group-input">
-                                <label for="pass">Password *</label>
-                                <input type="text" id="pass">
+                                <input type="password" name = "password" id="password" placeholder="Password" data-type="password" data-error="Invalid password">
                             </div>
-                            <div class="group-input gi-check">
+<!--                             <div class="group-input gi-check">
                                 <div class="gi-more">
                                     <label for="save-pass">
                                         Save Password
@@ -182,7 +180,7 @@
                                     </label>
                                     <a href="#" class="forget-pass">Forget your Password</a>
                                 </div>
-                            </div>
+                            </div> -->
                             <button type="submit" class="site-btn login-btn">Sign In</button>
                         </form>
                         <div class="switch-login">
@@ -285,8 +283,8 @@
     <script src="../js/jquery.dd.min.js"></script>
     <script src="../js/jquery.slicknav.js"></script>
     <script src="../js/owl.carousel.min.js"></script>
+    <script src="../js/functions.js"></script>
     <script src="../js/main.js"></script>
 </body>
 
-</html>  
-   
+</html>

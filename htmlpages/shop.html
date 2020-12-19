@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/index.css" type="text/css">
 </head>
 
 <body>
@@ -41,9 +42,9 @@
                             <a href="./index.html">
                                 <img src="../img/logo.png" alt="">
                             </a>
-                        </div>    
+                        </div>
                     </div>
-                    <div class="col-lg-7 col-md-7">
+                    <div class="col-lg-5 col-md-5">
                         <div class="advanced-search">
                             <form action="#" class="input-group">
                                 <input type="text" placeholder="What do you need?">
@@ -51,7 +52,13 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-lg-3 text-right col-md-3">
+                    <div class="col-lg-3 col-md-2">
+                        <div style="display:flex; justify-content:space-around; align-items: center;">
+                            <div class="profile" data-toggle="tooltip" data-placement="top" title="Profile" id="profile_avatar"></div>
+                            <p id="profile_name"></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2">
                         <ul class="nav-right">
                             <li class="cart-icon"><a href="#">
                                 <i class="icon_bag_alt"></i>
@@ -132,8 +139,8 @@
                             </ul>
                         </li>
                         <li><a href="./contact.html">Contact</a></li>
-                        <li ><a href="./login.html">Login</a></li>
-                        <li ><a href="./register.html">Register</a></li>
+                        <li ><a href="./login.html" id="user_login">Login</a></li>
+                        <li ><a href="./register.html" id="user_register">Register</a></li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -628,6 +635,7 @@
     <!-- Footer Section End -->
     <!-- Js Plugins -->
     <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/popper.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery-ui.min.js"></script>
     <script src="../js/jquery.countdown.min.js"></script>
@@ -639,5 +647,4 @@
     <script src="../js/main.js"></script>
 </body>
 
-</html>  
-  
+</html>

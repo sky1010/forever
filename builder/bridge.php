@@ -17,7 +17,7 @@
             try{
                 //[ TODO ]
                 $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-                $result = select($connection, 'SELECT * FROM tbl_user WHERE user_id = ?', [1]);
+                $result = select($connection, 'SELECT * FROM tbl_user', []);
                 db_disconnect($connection);
 
                 echo json_encode($result);
@@ -33,11 +33,23 @@
 
                 exec_sql(
                     $connection,
-                    'INSERT INTO tbl_user (user_username, user_password, user_email, user_address, user_zip_code) VALUES (? , ?, ?, ?, ?)',
-                    [$_REQUEST['username'], password_hash($_REQUEST['pass'], PASSWORD_DEFAULT), $_REQUEST['email'], $_REQUEST['address'], 1254]
+                    'INSERT INTO tbl_user (username, password, email_address, account_status, avatar, role) VALUES (? , ?, ?, ?, ?, ?)',
+                    [$_REQUEST['username'], $_REQUEST['pass'], $_REQUEST['email'], 'active', '../uploads/users_avatar/default_avatar.jpg', 'client']
                 );
 
-                $result = select($connection, 'SELECT * FROM tbl_user WHERE user_username = ?', [$_REQUEST['username']]);
+                $result = select($connection, 'SELECT * FROM tbl_user WHERE username = ?', [$_REQUEST['username']]);
+                echo json_encode($result);
+
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
+        case 'db_user_login':
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                $result = select($connection, 'SELECT * FROM tbl_user WHERE username = ? AND password = ? ', [$_REQUEST['username'], $_REQUEST['password']]);
                 echo json_encode($result);
 
                 db_disconnect($connection);

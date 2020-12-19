@@ -270,76 +270,65 @@
         }
     });
 
-    //ajax, send async request to server side
-    function ajax(url, data, parameters){
-        $.ajax({ url: url, data: data})
-        .done(function(data){
-            parameters.c(data);
-        });
-    }
+    $("#form_login").on("submit", function(event){
+        event.preventDefault();
+        var serialized_form =  $('#form_login').serialize();
 
-    //validate_input, client side validation
-    function validate_input(type, value){
-        //object having different regex pattern for each input type
-        const regex = {
-            username: /^[a-zA-Z]+$/,
-            password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*?])(?=.{8,})/,
-            email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            phone: /^5[0-9]{7}/,
-            none: /.*/,
-            // construct a regex from the previous password field
-            confirm_password: new RegExp($("[name='pass']").val())
-        };
-
-        //throws an error if the input type does not have a regex pattern
-        if(!regex.hasOwnProperty(type))
-            throw `Given input type does not exist, type: ${type}`;
-
-        //if field empty, evaluate the field as valid else test for regex pattern
-        return (value == '')?true:regex[type].test(value);
-    }
-
-    function toggle_input_state(input, state){
-        //always remove previously injected element
-        $(input).parent().find('.error').remove();
-        $(input).data('input_valid', true);
-
-        if(!state){
-            var error_node = document.createElement('p');
-            $(error_node).addClass('error');
-            $(error_node).text($(input).attr('data-error'));
-            $(input).parent().append(error_node);
-            $(input).data('input_valid', false);
+        if(form_valid($('#form_login'))){
+            ajax(
+                '../builder/bridge.php'+"?"+serialized_form,
+                { request_type: 'db_user_login'},
+                {c: initialize_user}
+            );
+        }else{
+            $('#form_login').find('input').each(function(index, node){
+                toggle_input_state($(node), !!$(node).data('input_valid'));
+            });
         }
-    }
-
-    function form_valid (form){
-        var bools = [];
-
-        $(form).find('input').each(function(index, node){
-            //Used the double-not operator to type cast the values to boolean
-            bools.push(!!$(node).data('input_valid'));
-        });
-
-        //evaluate the array (input state transformed as boolean based on validity)
-        for(const bool of bools){
-            if(!bool){
-                return false;
-            }
-        }
-
-        return true;
-    }
+    });
 
     function initialize_user(dataset){
-        console.log(dataset);
-        // const deserialized_data = JSON.parse(dataset);
-        // sessionStorage("user_metadata", JSON.stringify({user_id: deserialized_data., username: deserialized_data}));
+        const deserialized_data = JSON.parse(dataset);
+        const user_metadata = {
+            user_id: deserialized_data[0].user_id,
+            username: deserialized_data[0].username,
+            avatar: deserialized_data[0].avatar,
+            role: deserialized_data[0].role
+        };
+
+        window.sessionStorage.setItem("user_metadata", JSON.stringify(user_metadata));
+
+        const path = (user_metadata.role == 'client')?"../htmlpages/shop.html":"../htmlpages/admin/admin.html";
+        window.location.href = path;
     }
 
-    // ajax(
-    //     '../builder/bridge.php',
-    //     { request_type: 'test_request'},
-    //     {c: initialize_user}
-    // );
+    $(document).ready(function(){
+        if(window.sessionStorage.getItem("user_metadata") != null){
+            const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+            // [QUIRK] different path directory level, changes relative path structure
+            if (window.location.pathname.split("/").pop() == "index.html"){
+                var split_path = user_metadata.avatar.split("/");
+                split_path.shift();
+                user_metadata.avatar = split_path.join("/");
+            }
+
+            $("#profile_avatar").css("background-image", "url('"+ user_metadata.avatar +"')");
+            $("#profile_name").text(user_metadata.username);
+            $('#user_login').data('islogged', true);
+
+            if($('#user_login').data('islogged')){
+                $('#user_register').parent().css('display', 'none');
+                $('#user_login').text('LOGOUT');
+            }
+        }
+    });
+
+    $('#user_login').click(function(){
+        $('#user_login').data('islogged', false);
+        window.sessionStorage.removeItem("user_metadata");
+        window.location.href = "../htmlpages/login.html";
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+
 })(jQuery);

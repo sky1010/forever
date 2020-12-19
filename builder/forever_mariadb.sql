@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 19, 2020 at 05:28 PM
+-- Generation Time: Dec 19, 2020 at 08:46 PM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.18
 
@@ -154,16 +154,18 @@ CREATE TABLE IF NOT EXISTS `tbl_user` (
   `password` varchar(255) NOT NULL,
   `email_address` varchar(100) DEFAULT NULL,
   `account_status` varchar(10) DEFAULT NULL,
+  `avatar` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_user`
 --
 
-INSERT INTO `tbl_user` (`user_id`, `username`, `password`, `email_address`, `account_status`) VALUES
-(1, 'john', 'sdadasdasdasd', 'john@gmail.com', 'pending');
+INSERT INTO `tbl_user` (`user_id`, `username`, `password`, `email_address`, `account_status`, `avatar`, `role`) VALUES
+(25, 'Pills', 'Pillsnet21!', 'pills@gmail.com', 'active', '../uploads/users_avatar/default_avatar.jpg', 'client');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
