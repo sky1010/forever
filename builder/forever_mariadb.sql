@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 19, 2020 at 03:24 PM
+-- Generation Time: Dec 19, 2020 at 03:55 PM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.18
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `tbl_cart`;
 CREATE TABLE IF NOT EXISTS `tbl_cart` (
-  `cart_id` int(2) NOT NULL,
+  `cart_id` int(2) NOT NULL AUTO_INCREMENT,
   `cart_qoh` int(2) DEFAULT NULL,
   `cart_product_qoh` int(2) DEFAULT NULL,
   `user_id` int(2) DEFAULT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `tbl_cart` (
 
 DROP TABLE IF EXISTS `tbl_category`;
 CREATE TABLE IF NOT EXISTS `tbl_category` (
-  `cat_id` int(2) NOT NULL,
+  `cat_id` int(2) NOT NULL AUTO_INCREMENT,
   `cat_desc` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`cat_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `tbl_category` (
 
 DROP TABLE IF EXISTS `tbl_color`;
 CREATE TABLE IF NOT EXISTS `tbl_color` (
-  `color_id` int(2) NOT NULL,
+  `color_id` int(2) NOT NULL AUTO_INCREMENT,
   `color` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`color_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `tbl_color` (
 
 DROP TABLE IF EXISTS `tbl_inventory`;
 CREATE TABLE IF NOT EXISTS `tbl_inventory` (
-  `inventory_id` int(2) NOT NULL,
+  `inventory_id` int(2) NOT NULL AUTO_INCREMENT,
   `inv_color` varchar(255) DEFAULT NULL,
   `inv_size` varchar(100) DEFAULT NULL,
   `inv_qoh` int(3) DEFAULT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `tbl_inventory` (
 
 DROP TABLE IF EXISTS `tbl_orders`;
 CREATE TABLE IF NOT EXISTS `tbl_orders` (
-  `order_id` int(2) NOT NULL,
+  `order_id` int(2) NOT NULL AUTO_INCREMENT,
   `o_sub_total` decimal(10,2) DEFAULT NULL,
   `o_tax` int(2) DEFAULT NULL,
   `o_shipping` varchar(255) DEFAULT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `tbl_order_line` (
 
 DROP TABLE IF EXISTS `tbl_product`;
 CREATE TABLE IF NOT EXISTS `tbl_product` (
-  `product_id` int(2) NOT NULL,
+  `product_id` int(2) NOT NULL AUTO_INCREMENT,
   `prod_desc` varchar(255) DEFAULT NULL,
   `prod_tags` varchar(255) DEFAULT NULL,
   `prod_brand` varchar(255) DEFAULT NULL,
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `tbl_product` (
 
 DROP TABLE IF EXISTS `tbl_user`;
 CREATE TABLE IF NOT EXISTS `tbl_user` (
-  `user_id` int(2) NOT NULL,
+  `user_id` int(2) NOT NULL AUTO_INCREMENT,
   `username` varchar(60) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email_address` varchar(100) DEFAULT NULL,
