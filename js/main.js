@@ -293,13 +293,17 @@
             user_id: deserialized_data[0].user_id,
             username: deserialized_data[0].username,
             avatar: deserialized_data[0].avatar,
-            role: deserialized_data[0].role
+            role: deserialized_data[0].role,
+            account_status: deserialized_data[0].account_status
         };
 
-        window.sessionStorage.setItem("user_metadata", JSON.stringify(user_metadata));
-
-        const path = (user_metadata.role == 'client')?"../htmlpages/shop.html":"../htmlpages/admin/admin.html";
-        window.location.href = path;
+        if(user_metadata.account_status == 'active'){
+            window.sessionStorage.setItem("user_metadata", JSON.stringify(user_metadata));
+            const path = (user_metadata.role == 'client')?"../htmlpages/shop.html":"../htmlpages/admin/admin.html";
+            window.location.href = path;
+        }else{
+            alert('Your account has been blocked');
+        }
     }
 
     $(document).ready(function(){
