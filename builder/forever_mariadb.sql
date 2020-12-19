@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 19, 2020 at 03:55 PM
+-- Generation Time: Dec 19, 2020 at 05:28 PM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.18
 
@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `tbl_order_line` (
   `product_id` int(2) DEFAULT NULL,
   `order_id` int(2) DEFAULT NULL,
   `ol_quantity` int(3) DEFAULT NULL,
+  `ol_postal_code` int(5) DEFAULT NULL,
   KEY `tbl_order_line_product_id_fk` (`product_id`),
   KEY `tbl_order_line_order_id_fk` (`order_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -131,6 +132,8 @@ CREATE TABLE IF NOT EXISTS `tbl_product` (
   `prod_tags` varchar(255) DEFAULT NULL,
   `prod_brand` varchar(255) DEFAULT NULL,
   `prod_image` varchar(255) DEFAULT NULL,
+  `prod_gender` varchar(60) DEFAULT NULL,
+  `prod_age_group` varchar(100) DEFAULT NULL,
   `cat_id` int(2) DEFAULT NULL,
   `cart_id` int(2) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
@@ -150,14 +153,17 @@ CREATE TABLE IF NOT EXISTS `tbl_user` (
   `username` varchar(60) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email_address` varchar(100) DEFAULT NULL,
-  `phone_number` int(8) DEFAULT NULL,
-  `postal_code` int(5) DEFAULT NULL,
-  `gender` varchar(20) DEFAULT NULL,
-  `age_group` varchar(20) DEFAULT NULL,
   `account_status` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_user`
+--
+
+INSERT INTO `tbl_user` (`user_id`, `username`, `password`, `email_address`, `account_status`) VALUES
+(1, 'john', 'sdadasdasdasd', 'john@gmail.com', 'pending');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -14,10 +14,6 @@ CREATE TABLE tbl_user
   username VARCHAR2 (60) NOT NULL UNIQUE,
   password VARCHAR2 (255) NOT NULL, -- Max length for password hashing
   email_address VARCHAR2 (100),
-  phone_number NUMBER(8), -- Mauritius number format
-  postal_code  NUMBER(5), -- Maurtius postal code format
-  gender VARCHAR2 (20) CHECK (gender IN ('female', 'male')),
-  age_group VARCHAR2 (20) CHECK (age_group IN ('adult', 'child')),
   account_status VARCHAR2 (10) CHECK ( account_status IN ('active', 'inactive')),
   CONSTRAINT tbl_user_user_id_pk PRIMARY KEY (user_id)
 );
@@ -46,6 +42,8 @@ CREATE TABLE tbl_product
   prod_tags VARCHAR2 (255),
   prod_brand VARCHAR2 (255),
   prod_image VARCHAR2 (255),
+  prod_gender VARCHAR2 (20) CHECK (gender IN ('female', 'male')),
+  prod_age_group VARCHAR2 (20) CHECK (age_group IN ('adult', 'child')),
   cat_id NUMBER (2),
   cart_id NUMBER (2),
   CONSTRAINT tbl_product_product_id_pk PRIMARY KEY (product_id),
@@ -70,6 +68,7 @@ CREATE TABLE tbl_order_line
 (
   product_id NUMBER (2),
   order_id NUMBER (2),
+  ol_postal_code  NUMBER(5), -- Maurtius postal code format
   ol_quantity NUMBER (3),
   CONSTRAINT tbl_order_line_product_id_fk FOREIGN KEY (product_id) REFERENCES tbl_product ( product_id ),
   CONSTRAINT tbl_order_line_order_id_fk FOREIGN KEY (order_id) REFERENCES tbl_orders ( order_id )
