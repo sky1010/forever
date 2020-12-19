@@ -41,7 +41,7 @@
                             <a href="./index.html">
                                 <img src="../img/logo.png" alt="">
                             </a>
-                        </div>    
+                        </div>
                     </div>
                     <div class="col-lg-7 col-md-7">
                         <div class="advanced-search">
@@ -164,20 +164,28 @@
                 <div class="col-lg-6 offset-lg-3">
                     <div class="register-form">
                         <h2>Register</h2>
-                        <form action="#">
+                        <form action="#" id="form_register">
                             <div class="group-input">
-                                <label for="username">Username or email address *</label>
-                                <input type="text" id="username">
+<!--                                 <label for="username">*</label> -->
+                                <input type="text" name="username" data-type="username" data-error="Invalid username" placeholder="Username">
                             </div>
                             <div class="group-input">
-                                <label for="pass">Password *</label>
-                                <input type="text" id="pass">
+<!--                                 <label for="pass">Password *</label> -->
+                                <input type="email" name="email" data-type="email" data-error="Invalid email address" placeholder="Email">
                             </div>
                             <div class="group-input">
-                                <label for="con-pass">Confirm Password *</label>
-                                <input type="text" id="con-pass">
+<!--                                 <label for="pass">Password *</label> -->
+                                <input type="text" name="address" placeholder="address" data-type="none" data-error="Invalid address">
                             </div>
-                            <button type="submit" class="site-btn register-btn">REGISTER</button>
+                            <div class="group-input">
+<!--                                 <label for="pass">Password *</label> -->
+                                <input type="password" name="pass" data-type="password" data-error="Invalid password" placeholder="Password">
+                            </div>
+                            <div class="group-input">
+<!--                                 <label for="con-pass">Confirm Password *</label> -->
+                                <input type="password" name="con-pass" data-type="confirm_password" data-error="Password don't match" placeholder="Confirm password">
+                            </div>
+                            <button type="submit" class="site-btn register-btn" >REGISTER</button>
                         </form>
                         <div class="switch-login">
                             <a href="./login.html" class="or-login">Or Login</a>
@@ -188,7 +196,7 @@
         </div>
     </div>
     <!-- Register Form Section End -->
-    
+
     <!-- Partner Logo Section Begin -->
     <div class="partner-logo">
         <div class="container">

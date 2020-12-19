@@ -4,3 +4,8 @@ display: none;
 #sec_kid{
 display: none;
 }
+
+.error{
+    font-size: 12px;
+    color: red;
+}
