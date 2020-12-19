@@ -32,7 +32,7 @@
     </div>
 
     <!-- Header Section Begin -->
-    <header class="header-section">
+    <!-- <header class="header-section">
         </div>
         <div class="nav-item">
             <div class="container">
@@ -46,7 +46,40 @@
                 <div id="mobile-menu-wrap"></div>
             </div>
         </div>
-    </header>
+    </header> -->
+    <header class="header-section">
+    </div>
+    <div class="container">
+        <div class="inner-header">
+            <div class="row">
+                <div class="col-lg-2 col-md-2">
+                    <div class="logo">
+                        <a href="../../index.html">
+                            <img src="../../img/logo.png" alt="">
+                        </a>
+                    </div>    
+                </div>
+                <div class="col-lg-7 col-md-7">
+
+                </div>
+                <div class="col-lg-3 text-right col-md-3">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-item">
+        <div class="container">
+            <nav class="nav-menu mobile-menu">
+                <ul>
+                    <li><a href="admin.html">Admin Home</a></li>
+                    <li><a href="./adminproduct.html">Product</a></li>
+                    <li  class="active"><a href="user.html">Users</a></li>
+                </ul>
+            </nav>
+            <div id="mobile-menu-wrap"></div>
+        </div>
+    </div>
+</header>
     <!-- Header End -->
 
  <!-- Breadcrumb Section Begin -->
@@ -66,25 +99,32 @@
 
     <!-- User Crud Operation Section Begin -->
     <h4 class="text-center">User List</h4>
+    <br/>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+                <div id="searchBar">
+                    <input type="text" id="usersearch" placeholder="Username" onkeyup="search()"> 
+                </div>
+            </div>
+            <div class="col-md-4">
+            </div>
+        </div>
+    </div>
     <br/>   
     <table class="table">
         <thead class="thead-dark">
           <tr>
-            <th scope="col">#</th>
             <th scope="col">Username</th>
             <th scope="col">Email</th>
-            <th scope="col">Passord</th>
+            <!-- <th scope="col">Password</th> -->
             <th scope="col">Status</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody id="user_dataset"></tbody>
-          <tr>
-            <td>1</td>
-            <td>srishti</td>
-            <td>srishti@sorbet.com</td>
-            <td>inactive</td>
-          </tr>
         </tbody>
       </table>
       
@@ -159,7 +199,7 @@
     <script src="../../js/jquery.slicknav.js"></script>
     <script src="../../js/owl.carousel.min.js"></script>
     <script src="../../js/main.js"></script>
-    <script src="../../js/cruduser.js"></script>
+    <script src="../../js/functions.js"></script>
 </body>
 
 </html>  
