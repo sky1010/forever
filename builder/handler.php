@@ -11,16 +11,27 @@
 
         $stmt = $connection->prepare($sql);
         //uses the splat operator to unpack the array as arguments
-        $stmt->bind_param(types($operands), ...$operands);
+        if(!empty($operands))
+            $stmt->bind_param(types($operands), ...$operands);
         $stmt->execute();
 
         //create variables dynamicaly and unpack it using splat operator
         $variable_ref = create_variables($stmt->field_count);
         $stmt->bind_result(...$variable_ref);
-        $stmt->fetch_assoc();
+        // $stmt->fetch_assoc();    // [FIXED] Does not work for prepared_statement
+
+        $stmt_meta = $stmt->get_result();
+        $dataset = [];
+
+        if($stmt_meta->num_rows > 0){
+            while($row = $stmt_meta->fetch_assoc()){
+                array_push($dataset, $row);
+            }
+        }
+
         $stmt->close();
 
-        return $variable_ref;
+        return $dataset;
     }
 
     //exec_sql, insert, delete or update dataset of a specified table
