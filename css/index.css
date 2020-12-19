@@ -9,3 +9,13 @@ display: none;
     font-size: 12px;
     color: red;
 }
+
+.profile{
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
+}
