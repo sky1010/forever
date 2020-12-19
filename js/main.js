@@ -119,7 +119,7 @@
         autoHeight: false,
         autoplay: true,
     });
-    
+
     /*------------------
         CountDown
     --------------------*/
@@ -140,7 +140,7 @@
     // For demo preview end
 
     console.log(timerdate);
-    
+
 
     // Use this for real timer date
     /* var timerdate = "2020/01/01"; */
@@ -149,9 +149,9 @@
         $(this).html(event.strftime("<div class='cd-item'><span>%D</span> <p>Days</p> </div>" + "<div class='cd-item'><span>%H</span> <p>Hrs</p> </div>" + "<div class='cd-item'><span>%M</span> <p>Mins</p> </div>" + "<div class='cd-item'><span>%S</span> <p>Secs</p> </div>"));
     });
 
-        
+
     /*----------------------------------------------------
-     Language Flag js 
+     Language Flag js
     ----------------------------------------------------*/
     $(document).ready(function(e) {
     //no use
@@ -203,7 +203,7 @@
         $(".fw-size-choose .sc-item label, .pd-size-choose .sc-item label").removeClass('active');
         $(this).addClass('active');
     });
-    
+
     /*-------------------
 		Nice Select
     --------------------- */
@@ -224,7 +224,7 @@
 	});
 
     $('.product-pic-zoom').zoom();
-    
+
     /*-------------------
 		Quantity change
 	--------------------- */
@@ -247,4 +247,99 @@
 		$button.parent().find('input').val(newVal);
 	});
 
+    //add listeners, triggered when the specified input moves out of focus
+    $(".group-input input").focusout(function(){
+        var is_valid = validate_input($(this).attr('data-type'), $(this).val());
+        toggle_input_state($(this), is_valid);
+    });
+
+    $('#form_register').on("submit", function(event){
+        event.preventDefault(); //prevent form submission
+        var serialized_form =  $('#form_register').serialize();
+
+        if(form_valid($('#form_register'))){
+            ajax(
+                '../builder/bridge.php'+"?"+serialized_form,
+                { request_type: 'db_insert_user'},
+                {c: initialize_user}
+            );
+        }else{
+            $('#form_register').find('input').each(function(index, node){
+                toggle_input_state($(node), !!$(node).data('input_valid'));
+            })
+        }
+    });
+
+    //ajax, send async request to server side
+    function ajax(url, data, parameters){
+        $.ajax({ url: url, data: data})
+        .done(function(data){
+            parameters.c(data);
+        });
+    }
+
+    //validate_input, client side validation
+    function validate_input(type, value){
+        //object having different regex pattern for each input type
+        const regex = {
+            username: /^[a-zA-Z]+$/,
+            password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*?])(?=.{8,})/,
+            email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            phone: /^5[0-9]{7}/,
+            none: /.*/,
+            // construct a regex from the previous password field
+            confirm_password: new RegExp($("[name='pass']").val())
+        };
+
+        //throws an error if the input type does not have a regex pattern
+        if(!regex.hasOwnProperty(type))
+            throw `Given input type does not exist, type: ${type}`;
+
+        //if field empty, evaluate the field as valid else test for regex pattern
+        return (value == '')?true:regex[type].test(value);
+    }
+
+    function toggle_input_state(input, state){
+        //always remove previously injected element
+        $(input).parent().find('.error').remove();
+        $(input).data('input_valid', true);
+
+        if(!state){
+            var error_node = document.createElement('p');
+            $(error_node).addClass('error');
+            $(error_node).text($(input).attr('data-error'));
+            $(input).parent().append(error_node);
+            $(input).data('input_valid', false);
+        }
+    }
+
+    function form_valid (form){
+        var bools = [];
+
+        $(form).find('input').each(function(index, node){
+            //Used the double-not operator to type cast the values to boolean
+            bools.push(!!$(node).data('input_valid'));
+        });
+
+        //evaluate the array (input state transformed as boolean based on validity)
+        for(const bool of bools){
+            if(!bool){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function initialize_user(dataset){
+        console.log(dataset);
+        // const deserialized_data = JSON.parse(dataset);
+        // sessionStorage("user_metadata", JSON.stringify({user_id: deserialized_data., username: deserialized_data}));
+    }
+
+    ajax(
+        '../builder/bridge.php',
+        { request_type: 'test_request'},
+        {c: initialize_user}
+    );
 })(jQuery);
