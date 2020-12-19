@@ -337,9 +337,9 @@
         // sessionStorage("user_metadata", JSON.stringify({user_id: deserialized_data., username: deserialized_data}));
     }
 
-    ajax(
-        '../builder/bridge.php',
-        { request_type: 'test_request'},
-        {c: initialize_user}
-    );
+    // ajax(
+    //     '../builder/bridge.php',
+    //     { request_type: 'test_request'},
+    //     {c: initialize_user}
+    // );
 })(jQuery);

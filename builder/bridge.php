@@ -46,6 +46,59 @@
                 http_response_code(400);
             }
             break;
+        case 'allUsers':
+                try{
+                    //[ TODO ]
+                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                    $result = select($connection, 'SELECT * FROM tbl_user ', []);
+                    db_disconnect($connection);
+    
+                    echo json_encode($result);
+    
+                }catch(Exception $e){
+                    http_response_code(400);
+                }
+    
+                break;
+        case 'update_user_suspended':
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+
+                exec_sql(
+                    $connection,
+                    'UPDATE tbl_user SET account_status = "inactive" WHERE user_id = ?',  [$_REQUEST['data']]
+                );
+
+                $result = select($connection, 'SELECT * FROM tbl_user ', []);
+                echo json_encode($result);
+
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+        
+            break;
+
+            case 'update_user_approved':
+                try{
+                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+    
+                    exec_sql(
+                        $connection,
+                        'UPDATE tbl_user SET account_status = "active" WHERE user_id = ?',  [$_REQUEST['data']]
+                    );
+    
+                    $result = select($connection, 'SELECT * FROM tbl_user ', []);
+                    echo json_encode($result);
+    
+                    db_disconnect($connection);
+                    http_response_code(200);
+                }catch(Exception $e){
+                    http_response_code(400);
+                }
+            
+                break;
         default:
             // HTTTP CODE BAD REQUEST
             http_response_code(400);
