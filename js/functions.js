@@ -246,7 +246,6 @@ function initialize_product(dataset){
 }
 function displayproducts (obj) {
     const product_data = JSON.parse(obj)
-    // console.log(product_data);
     for(var i = 0; i < product_data.length; i++){
 		var trNodeProduct = document.createElement("tr");
         var prodNameNode = document.createElement("td");
@@ -274,15 +273,13 @@ function displayproducts (obj) {
 		$("#product_dataset").append(trNodeProduct);
 
 
-		//------Button event to suspend status-----------
 		$("#btn-edit-"+product_data[i].product_id).click(function(){
-			// var userID = $(this).parent().parent();
-            // emptyContent("#product_dataset");
-            // ajax(
-            //     '../../builder/bridge.php',
-            //     { request_type: 'update_user_suspended', data: $(userID).attr("id") },
-            //     {c: displayuser}
-            // );
+			var prodID = $(this).parent().parent();
+            ajax(
+                '../../builder/bridge.php',
+                { request_type: 'update_product', data: $(prodID).attr("id") },
+                {c: updateproduct}
+            );
 		});
 
 		$("#btn-delete-"+product_data[i].product_id).click(function(){
@@ -317,4 +314,15 @@ function displayproducts (obj) {
             break;
         }
     }
+}
+
+function updateproduct(obj){
+    const product_data = JSON.parse(obj);
+    window.location.href = "admin.html";
+    // console.log('product_data');
+    $(document).ready(function () {
+        console.log(product_data[0]['prod_name']);
+        console.log($("#product_name"));
+        $("#product_name").val(product_data[0]['prod_name']);
+    });
 }
