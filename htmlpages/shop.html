@@ -629,6 +629,33 @@
                 </div>
             </div>
         </div>
+
+        <div class="overlay">
+            <form id="form-edit" method="post" action="../builder/bridge.php?request_type=modify_user" enctype="multipart/form-data" onsubmit="submitForm(this,  {c: updateUser, o: null}); return false;">
+                <img src="../img/close.svg" class="xs-svg dismiss">
+                <label for="uploadImage">
+                    <img src="../uploads/users_avatar/default_avatar.jpg" class="profile-md mb-4 mt-4" id="f-profile">
+                </label>
+                <input type="file" name="user_profile" style="display: none;" id="uploadImage" data-type="none" data-error="">
+                <input type="hidden" name="user_id" style="display: none;" data-type="none" data-error="" id="user_id">
+                <div class="form-row">
+                    <input type="email" name="email" placeholder="Email" data-type="email" data-error="Invalid email address">
+                </div>
+                <div class="form-row">
+                    <input type="password" name="pass" placeholder="Password" data-type="password" data-error="Invalid password">
+                </div>
+                <div class="form-row">
+                    <input type="password" name="confirm_pass" placeholder="Confirm password" data-type="confirm_password" data-error="Password don't match">
+                </div>
+                <div class="form-row">
+                    <p class="notice align-right">Do remember your new choices master</p>
+                </div>
+                <div style="display:flex; justify-content:space-evenly; width:100%;">
+                    <button type="submit" id="form-register-btn" class="form-btn">New me</button>
+                    <button type="button" id="to-profile-page" class="form-btn">Collections</button>
+                </div>
+            </form>
+        </div>
     </footer>
     <!-- Footer Section End -->
     <!-- Js Plugins -->
@@ -642,6 +669,7 @@
     <script src="../js/jquery.dd.min.js"></script>
     <script src="../js/jquery.slicknav.js"></script>
     <script src="../js/owl.carousel.min.js"></script>
+    <script src="../js/functions.js"></script>
     <script src="../js/main.js"></script>
 </body>
 
