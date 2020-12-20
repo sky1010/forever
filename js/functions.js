@@ -3,16 +3,27 @@
 ******************************************/
 var userSnapshot;
 $(document).ready(function () {
-//     ajax(
-//      '../../builder/bridge.php',
-//      { request_type: 'allUsers'},
-//      {c: displayuser}
-//  );
-//      ajax(
-//      '../../builder/bridge.php',
-//      { request_type: 'allProducts'},
-//      {c: displayproducts}
-//  );
+    var path = window.location.pathname;
+    var page = path.split("/").pop();
+    switch(page) {
+        case 'adminproduct.html':
+            ajax(
+                '../../builder/bridge.php',
+                { request_type: 'allProducts'},
+                {c: displayproducts}
+            );
+          break;
+        case 'user.html':
+            ajax(
+                '../../builder/bridge.php',
+                { request_type: 'allUsers'},
+                {c: displayuser}
+            );
+          break;
+        default:
+         
+      }
+
 });
 
 
