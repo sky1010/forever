@@ -278,8 +278,6 @@
     $('#form-register-btn').on("click", function(event){
         event.preventDefault(); //prevent form submission
 
-        var serialized_form = $('#form-edit').serialize();
-
         if(form_valid($('#form-edit'))){
             var session = JSON.parse(window.sessionStorage.getItem('user_metadata'));
             $("#user_id").val(session.user_id);
@@ -290,6 +288,19 @@
             })
         }
     });
+
+    $("#product_submit").click(function(){
+        event.preventDefault(); //prevent form submission
+
+        if(form_valid($('#form_product'))){
+            $(this).submit();
+        }else{
+            $('#form_product').find('input').each(function(index, node){
+                toggle_input_state($(node), !!$(node).data('input_valid'), 'Field cannot be empty');
+            })
+        }
+    });
+
 
     $("#form_login").on("submit", function(event){
         event.preventDefault();

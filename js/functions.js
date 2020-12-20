@@ -43,15 +43,16 @@ function validate_input(type, value){
         throw `Given input type does not exist, type: ${type}`;
 
     //if field empty, evaluate the field as valid else test for regex pattern
-    return (value == '')?true:regex[type].test(value);
+    return (value == '')?false:regex[type].test(value);
 }
 
 function toggle_input_state(input, state, err = null){
     //always remove previously injected element
     $(input).parent().find('.error').remove();
     $(input).data('input_valid', true);
+    const input_type_exception = ['file', 'checkbox', 'hidden', 'radio'];
 
-    if(!state){
+    if(!state && !input_type_exception.includes($(input).attr('type'))){
         var error_node = document.createElement('p');
         $(error_node).addClass('error');
         $(error_node).text((err == null)?$(input).attr('data-error'):err);
@@ -62,7 +63,7 @@ function toggle_input_state(input, state, err = null){
 
 function form_valid (form){
     var bools = [];
-    const input_type_exception = ['file', 'checkbox', 'hidden'];
+    const input_type_exception = ['file', 'checkbox', 'hidden', 'radio'];
     $(form).find('input').each(function(index, node){
         //Used the double-not operator to type cast the values to boolean
         if(!input_type_exception.includes($(node).attr('type')))
@@ -177,24 +178,6 @@ function submitForm(oFormElement, args){
     xmlhttp.send(new FormData(oFormElement));
 }
 
-function updateUser(obj){
-    var updated_user = JSON.parse(obj);
-    var session = JSON.parse(window.sessionStorage.getItem('user_metadata'));
-    session.username = updated_user[0].username;
-    session.avatar = updated_user[0].avatar;
-
-    window.sessionStorage.setItem('user_metadata', JSON.stringify(session));
-    if (window.location.pathname.split("/").pop() == "index.html"){
-        var split_path = session.avatar.split("/");
-        split_path.shift();
-        session.avatar = split_path.join("/");
-    }
-
-    $("#profile_avatar").css("background-image", "url('"+ session.avatar +"')");
-    $("#profile_name").text(session.username);
-
-    $(".dismiss").click();
-}
 // $('#form_product').on("submit", function(event){
 //     event.preventDefault(); //prevent form submission
 //     var serialized_form =  $('#form_product').serialize();
@@ -265,7 +248,7 @@ function displayproducts (obj) {
 		$(trNodeProduct).attr("id", product_data[i].product_id);
 		$(prodNameNode).text(product_data[i].prod_name );
 
-        
+
 		$(editNode).text("Edit");
 		$(editNode).attr("id", "btn-edit-"+product_data[i].product_id);
 		$(deleteNode).text("Delete");
