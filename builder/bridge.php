@@ -206,6 +206,20 @@
                         http_response_code(400);
                     }
                     break;
+                
+                case 'update_product':
+                    try{
+                        //[ TODO ]
+                        $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                        $result = select($connection, 'SELECT * FROM tbl_product p, tbl_inventory i WHERE p.product_id = i.product_id AND p.product_id = ?', [$_REQUEST['data']]);
+                        db_disconnect($connection);
+        
+                        echo json_encode($result);
+        
+                    }catch(Exception $e){
+                        http_response_code(400);
+                    }
+                break;
         default:
             // HTTTP CODE BAD REQUEST
             http_response_code(400);
