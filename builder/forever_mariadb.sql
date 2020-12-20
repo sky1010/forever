@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2020 at 11:41 AM
+-- Generation Time: Dec 20, 2020 at 01:47 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -71,6 +71,16 @@ CREATE TABLE `tbl_inventory` (
   `product_id` int(2) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `tbl_inventory`
+--
+
+INSERT INTO `tbl_inventory` (`inventory_id`, `inv_color`, `inv_size`, `inv_qoh`, `inv_price`, `product_id`) VALUES
+(1, 'Blue', 'Medium', 50, '550.00', 2),
+(2, 'Product Tags', 'Medium', 80, '400.00', 3),
+(3, 'dwqwdq', 'small', 50, '500.00', 4),
+(4, 'test', 'Medium', 12, '100.00', 5);
+
 -- --------------------------------------------------------
 
 --
@@ -114,9 +124,18 @@ CREATE TABLE `tbl_product` (
   `prod_brand` varchar(255) DEFAULT NULL,
   `prod_image` varchar(255) DEFAULT NULL,
   `prod_age_group` varchar(100) DEFAULT NULL,
-  `cat_id` int(2) DEFAULT NULL,
-  `cart_id` int(2) DEFAULT NULL
+  `cat_id` int(2) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_product`
+--
+
+INSERT INTO `tbl_product` (`product_id`, `prod_name`, `prod_desc`, `prod_tags`, `prod_brand`, `prod_image`, `prod_age_group`, `cat_id`) VALUES
+(2, 'Summer Blouse', 'A beautiful handmade cloth', 'cloth', 'Body Soul', '../uploads/users_avatar/default_avatar.jpg', 'women', 1),
+(3, 'Product Name', 'Product Description', 'Product Tags', 'Product Brand', '../uploads/users_avatar/default_avatar.jpg', 'women', 1),
+(4, 'qdwf', 'wdqwd', 'dqwdwq', 'dwqwdq', '../uploads/users_avatar/default_avatar.jpg', 'women', 1),
+(5, 'test', 'test', 'test', 'test', '../uploads/users_avatar/default_avatar.jpg', 'women', 1);
 
 -- --------------------------------------------------------
 
@@ -139,7 +158,7 @@ CREATE TABLE `tbl_user` (
 --
 
 INSERT INTO `tbl_user` (`user_id`, `username`, `password`, `email_address`, `account_status`, `avatar`, `role`) VALUES
-(25, 'pills', 'YASHveer2510#', 'pills@gmail.com', 'inactive', '../uploads/users_avatar/default_avatar.jpg', 'client'),
+(25, 'pills', 'YASHveer2510#', 'pill@gmail.com', 'active', '../uploads/users_avatar/logo.png', 'client'),
 (26, 'sky', 'YASHveer2510#', 'skyrider2531@gmail.cpm', 'active', '../uploads/users_avatar/default_avatar.jpg', 'admin'),
 (27, 'beast', 'YASHveer2510#', 'beast@gmail.com', 'active', '../uploads/users_avatar/default_avatar.jpg', 'client');
 
@@ -186,8 +205,7 @@ ALTER TABLE `tbl_order_line`
 --
 ALTER TABLE `tbl_product`
   ADD PRIMARY KEY (`product_id`),
-  ADD KEY `tbl_product_cat_id_fk` (`cat_id`),
-  ADD KEY `tbl_product_cart_id_fk` (`cart_id`);
+  ADD KEY `tbl_product_cat_id_fk` (`cat_id`);
 
 --
 -- Indexes for table `tbl_user`
@@ -216,7 +234,7 @@ ALTER TABLE `tbl_category`
 -- AUTO_INCREMENT for table `tbl_inventory`
 --
 ALTER TABLE `tbl_inventory`
-  MODIFY `inventory_id` int(2) NOT NULL AUTO_INCREMENT;
+  MODIFY `inventory_id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_orders`
@@ -228,7 +246,7 @@ ALTER TABLE `tbl_orders`
 -- AUTO_INCREMENT for table `tbl_product`
 --
 ALTER TABLE `tbl_product`
-  MODIFY `product_id` int(2) NOT NULL AUTO_INCREMENT;
+  MODIFY `product_id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_user`

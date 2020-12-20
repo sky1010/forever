@@ -13,7 +13,7 @@ $(document).ready(function () {
 
 //ajax, send async request to server side
 function ajax(url, data, parameters){
-    $.ajax({ url: url, data: data, processData: false, contentType: false})
+    $.ajax({ url: url, data: data})
     .done(function(data){
         parameters.c(data);
     });

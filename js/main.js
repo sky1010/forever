@@ -357,7 +357,7 @@
 
     $("#to-profile-page").click(function(){
         $("#form-edit").parent().css("display", "flex");
-        window.location.href = "htmlpages/profile.html";
+        window.location.href = "./profile.html";
     });
 
     $("#uploadImage").change(function(){
