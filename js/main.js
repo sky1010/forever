@@ -320,6 +320,8 @@
     });
 
     function initialize_user(dataset){
+        $("#account_suspended").parent().css("display", "none");
+
         if(JSON.parse(dataset).length != 0){
             const deserialized_data = JSON.parse(dataset);
             const user_metadata = {
@@ -331,11 +333,12 @@
             };
 
             if(user_metadata.account_status == 'active'){
+                $('#profile_avatar').css('display', 'block');
                 window.sessionStorage.setItem("user_metadata", JSON.stringify(user_metadata));
                 const path = (user_metadata.role == 'client')?"../htmlpages/shop.html":"../htmlpages/admin/admin.html";
                 window.location.href = path;
             }else{
-                alert('Your account has been blocked');
+                $("#account_suspended").parent().css("display", "flex");
             }
         }else{
             $('#form_login').find('input').each(function(index, node){
