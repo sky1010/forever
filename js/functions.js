@@ -2,6 +2,8 @@
     FOREVER functions
 ******************************************/
 var userSnapshot;
+var productSnapshot;
+
 $(document).ready(function () {
     var path = window.location.pathname;
     var page = path.split("/").pop();
@@ -274,7 +276,7 @@ function displayproducts (obj) {
 
 		//------Button event to suspend status-----------
 		$("#btn-edit-"+product_data[i].product_id).click(function(){
-			// var userID = $(this).parent();
+			// var userID = $(this).parent().parent();
             // emptyContent("#product_dataset");
             // ajax(
             //     '../../builder/bridge.php',
@@ -283,16 +285,36 @@ function displayproducts (obj) {
             // );
 		});
 
-		$("#btn-approve-"+product_data[i].product_id).click(function(){
-			// var userID = $(this).parent();
-            // emptyContent("#product_dataset");
-            // ajax(
-            //     '../../builder/bridge.php',
-            //     { request_type: 'update_user_approved', data: $(userID).attr("id") },
-            //     {c: displayuser}
-            // );
+		$("#btn-delete-"+product_data[i].product_id).click(function(){
+            var prodID = $(this).parent().parent();
+            console.log($(prodID).attr("id"));
+            emptyContent("#product_dataset");
+            ajax(
+                '../../builder/bridge.php',
+                { request_type: 'delete_product', data: $(prodID).attr("id") },
+                {c: displayproducts}
+            );
 		});
 
 	}
-	// userSnapshot = $("#user_dataset").children();
+	productSnapshot = $("#product_dataset").children();
   }
+  function searchproduct(){
+    var text = $("#searchBarproduct input").val();
+    emptyContent("#product_dataset");
+    for(var index = 0; index < productSnapshot.length; index++){
+        if($(productSnapshot[index].children[0]).text().includes(text)){
+
+            if(text == ""){
+              	emptyContent("#product_dataset");
+               	$("#product_dataset").append($(productSnapshot));
+               	// console.log($(productSnapshot));
+            }else{
+            	emptyContent("#product_dataset");
+                $("#product_dataset").append($(productSnapshot[index]));
+                	// console.log($(productSnapshot[index]));
+            }
+            break;
+        }
+    }
+}

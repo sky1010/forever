@@ -182,6 +182,30 @@
                     http_response_code(400);
                 }
                 break;
+
+                case 'delete_product':
+                    try{
+                        $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+    
+                        exec_sql(
+                            $connection,
+                            'DELETE FROM tbl_product WHERE product_id = ?',  [$_REQUEST['data']]
+                        );
+
+                        exec_sql(
+                            $connection,
+                            'DELETE FROM tbl_inventory WHERE product_id = ?',  [$_REQUEST['data']]
+                        );
+    
+                        $result = select($connection, 'SELECT * FROM tbl_product ', []);
+                        echo json_encode($result);
+    
+                        db_disconnect($connection);
+                        http_response_code(200);
+                    }catch(Exception $e){
+                        http_response_code(400);
+                    }
+                    break;
         default:
             // HTTTP CODE BAD REQUEST
             http_response_code(400);
