@@ -137,7 +137,7 @@
                     }catch(Exception $e){
                         http_response_code(400);
                     }
-                break;
+            break;        
         default:
             // HTTTP CODE BAD REQUEST
             http_response_code(400);
