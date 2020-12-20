@@ -10,7 +10,8 @@ display: none;
     color: red;
 }
 
-.profile{
+.profile, .profile_xl{
+    background-image: url('../uploads/users_avatar/default_avatar.jpg');
     width: 40px;
     height: 40px;
     object-fit: contain;
@@ -18,4 +19,98 @@ display: none;
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 50%;
+    margin: auto;
+}
+
+.profile_xl{
+    width: 200px;
+    height: 200px;
+}
+
+.border_outer{
+    border: 6px solid #e7ab3c;
+}
+
+.align-right{
+    padding-left: 100px;
+    text-align: right;
+}
+
+
+#form-edit button{
+    padding: 10px 20px;
+    background-color: #e7ab3c;
+    border: 1px solid #e7ab3c;
+    border-radius: 10px;
+    color: #fff;
+    margin-top: 20px;
+}
+
+
+.overlay{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.90);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 3;
+}
+
+
+#form-edit input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #000;
+    border-radius: 10px;
+    text-align: left;
+    outline: none;
+    padding-left: 10px;
+    margin: 10px 0px;
+}
+
+#form-edit {
+    width: 400px;
+    height: auto;
+    padding: 30px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 10px;
+    border: none;
+    color: #000 !important;
+}
+
+
+.xs-svg {
+    width: 30px;
+    height: auto;
+}
+
+.form-row {
+    width: 70%;
+}
+
+.notice {
+    font-size: 10px;
+}
+
+
+.profile-md{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    padding: 10px;
+    border: 2px solid #E69A3D;
+    object-fit: cover;
+}
+
+#form-edit p{
+    line-height: unset;
+    color: #000 !important;
 }

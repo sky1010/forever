@@ -253,6 +253,11 @@
         toggle_input_state($(this), is_valid);
     });
 
+    $(".form-row input").focusout(function(){
+        var is_valid = validate_input($(this).attr('data-type'), $(this).val());
+        toggle_input_state($(this), is_valid);
+    });
+
     $('#form_register').on("submit", function(event){
         event.preventDefault(); //prevent form submission
         var serialized_form =  $('#form_register').serialize();
@@ -265,6 +270,22 @@
             );
         }else{
             $('#form_register').find('input').each(function(index, node){
+                toggle_input_state($(node), !!$(node).data('input_valid'));
+            })
+        }
+    });
+
+    $('#form-register-btn').on("click", function(event){
+        event.preventDefault(); //prevent form submission
+
+        var serialized_form = $('#form-edit').serialize();
+
+        if(form_valid($('#form-edit'))){
+            var session = JSON.parse(window.sessionStorage.getItem('user_metadata'));
+            $("#user_id").val(session.user_id);
+            $(this).submit();
+        }else{
+            $('#form-edit').find('input').each(function(index, node){
                 toggle_input_state($(node), !!$(node).data('input_valid'));
             })
         }
@@ -318,6 +339,7 @@
 
             $("#profile_avatar").css("background-image", "url('"+ user_metadata.avatar +"')");
             $("#profile_name").text(user_metadata.username);
+            $("#f-profile").attr("src", user_metadata.avatar);
             $('#user_login').data('islogged', true);
 
             if($('#user_login').data('islogged')){
@@ -331,6 +353,23 @@
         $('#user_login').data('islogged', false);
         window.sessionStorage.removeItem("user_metadata");
         window.location.href = "../htmlpages/login.html";
+    });
+
+    $("#to-profile-page").click(function(){
+        $("#form-edit").parent().css("display", "flex");
+        window.location.href = "htmlpages/profile.html";
+    });
+
+    $("#uploadImage").change(function(){
+        $("#f-profile").attr("src", window.URL.createObjectURL($(this)[0].files[0]));
+    });
+
+    $("#profile_avatar").click(function(){
+        $("#form-edit").parent().css("display", "flex");
+    });
+
+    $(".dismiss").click(function(){
+        $(this).parent().parent().css("display", "none");
     });
 
     $('[data-toggle="tooltip"]').tooltip();
