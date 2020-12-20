@@ -112,32 +112,36 @@
 
                 break;
 
-            case 'db_insert_product':
-                    try{
-                        $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-        
-                        exec_sql(
-                            $connection,
-                            'INSERT INTO tbl_product (prod_name, prod_desc, prod_tags, prod_brand, prod_image, prod_age_group,cat_id) VALUES (? , ?, ?, ?, ?, ?, ?)',
-                            [$_REQUEST['product_name'], $_REQUEST['product_desc'], $_REQUEST['product_tags'], $_REQUEST['product_brand'] ,'../uploads/users_avatar/default_avatar.jpg',$_REQUEST['product_gender_cat'] , $_REQUEST['category'] ]
-                        );
-        
-                        $result = select($connection, 'SELECT product_id FROM tbl_product WHERE prod_name = ?', [$_REQUEST['product_name']]);
-                        // echo json_encode($result);
+        case 'db_insert_product':
+            $target_dir = "./uploads/products/";
+            $target_file = $target_dir.basename($_FILES["product_image"]["name"]);
+            try{
+                if(move_uploaded_file($_FILES["product_image"]["tmp_name"], "../".$target_file)){
+                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
-                        exec_sql(
-                            $connection,
-                            'INSERT INTO tbl_inventory (inv_color, inv_size, inv_qoh, inv_price, product_id) VALUES (? , ?, ?, ?, ?)',
-                            [$_REQUEST['product_color'], $_REQUEST['clothing_size'], $_REQUEST['product_qty'], $_REQUEST['product_price'] , $result[0]['product_id'] ]
-                        );
-                        echo json_encode(['data' => 'success']);
-        
-                        db_disconnect($connection);
-                        http_response_code(200);
-                    }catch(Exception $e){
-                        http_response_code(400);
-                    }
-            break;        
+                    exec_sql(
+                        $connection,
+                        'INSERT INTO tbl_product (prod_name, prod_desc, prod_tags, prod_brand, prod_image, prod_age_group,cat_id) VALUES (? , ?, ?, ?, ?, ?, ?)',
+                        [$_REQUEST['product_name'], $_REQUEST['product_desc'], $_REQUEST['product_tags'], $_REQUEST['product_brand'] ,$target_file,$_REQUEST['product_gender_cat'] , $_REQUEST['category'] ]
+                    );
+
+                    $result = select($connection, 'SELECT product_id FROM tbl_product WHERE prod_name = ?', [$_REQUEST['product_name']]);
+                    // echo json_encode($result);
+
+                    exec_sql(
+                        $connection,
+                        'INSERT INTO tbl_inventory (inv_color, inv_size, inv_qoh, inv_price, product_id) VALUES (? , ?, ?, ?, ?)',
+                        [$_REQUEST['product_color'], $_REQUEST['clothing_size'], $_REQUEST['product_qty'], $_REQUEST['product_price'] , $result[0]['product_id'] ]
+                    );
+                    echo json_encode(['data' => 'success']);
+
+                    db_disconnect($connection);
+                    http_response_code(200);
+                }
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
         case 'modify_user':
             $target_dir = "./uploads/users_avatar/";
             $target_file = $target_dir.basename($_FILES["user_profile"]["name"]);

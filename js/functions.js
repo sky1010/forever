@@ -28,6 +28,7 @@ function validate_input(type, value){
         email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         phone: /^5[0-9]{7}/,
         none: /.*/,
+        number: /[0-9]/,
         // construct a regex from the previous password field
         confirm_password: new RegExp($("[name='pass']").val())
     };
@@ -40,7 +41,7 @@ function validate_input(type, value){
     return (value == '')?true:regex[type].test(value);
 }
 
-function toggle_input_state(input, state){
+function toggle_input_state(input, state, err = null){
     //always remove previously injected element
     $(input).parent().find('.error').remove();
     $(input).data('input_valid', true);
@@ -48,7 +49,7 @@ function toggle_input_state(input, state){
     if(!state){
         var error_node = document.createElement('p');
         $(error_node).addClass('error');
-        $(error_node).text($(input).attr('data-error'));
+        $(error_node).text((err == null)?$(input).attr('data-error'):err);
         $(input).parent().append(error_node);
         $(input).data('input_valid', false);
     }
@@ -189,30 +190,56 @@ function updateUser(obj){
 
     $(".dismiss").click();
 }
-$('#form_product').on("submit", function(event){
-    event.preventDefault(); //prevent form submission
-    var serialized_form =  $('#form_product').serialize();
-    console.log(serialized_form);
+// $('#form_product').on("submit", function(event){
+//     event.preventDefault(); //prevent form submission
+//     var serialized_form =  $('#form_product').serialize();
+//     console.log(serialized_form);
 
-    ajax(
-        '../../builder/bridge.php'+"?"+serialized_form,
-        { request_type: 'db_insert_product'},
-        {c: initialize_product}
-    );
+//     ajax(
+//         '../../builder/bridge.php'+"?"+serialized_form,
+//         { request_type: 'db_insert_product'},
+//         {c: initialize_product}
+//     );
 
-    // if(form_valid($('#form_product'))){
-    //     ajax(
-    //         '../builder/bridge.php'+"?"+serialized_form,
-    //         { request_type: 'db_insert_product'},
-    //         {c: initialize_user}
-    //     );
-    // }else{
-    //     $('#form_product').find('input').each(function(index, node){
-    //         toggle_input_state($(node), !!$(node).data('input_valid'));
-    //     })
-    // }
-});
+//     // if(form_valid($('#form_product'))){
+//     //     ajax(
+//     //         '../builder/bridge.php'+"?"+serialized_form,
+//     //         { request_type: 'db_insert_product'},
+//     //         {c: initialize_user}
+//     //     );
+//     // }else{
+//     //     $('#form_product').find('input').each(function(index, node){
+//     //         toggle_input_state($(node), !!$(node).data('input_valid'));
+//     //     })
+//     // }
+// });
+// function initialize_product(dataset){
+//     // const deserialized_data = JSON.parse(dataset);
+//     console.log(dataset);
+// }
+
+function updateUser(obj){
+    var updated_user = JSON.parse(obj);
+    var session = JSON.parse(window.sessionStorage.getItem('user_metadata'));
+    session.username = updated_user[0].username;
+    session.avatar = updated_user[0].avatar;
+
+    window.sessionStorage.setItem('user_metadata', JSON.stringify(session));
+    if (window.location.pathname.split("/").pop() == "index.html"){
+        var split_path = session.avatar.split("/");
+        split_path.shift();
+        session.avatar = split_path.join("/");
+    }
+
+    $("#profile_avatar").css("background-image", "url('"+ session.avatar +"')");
+    $("#profile_name").text(session.username);
+
+    $(".dismiss").click();
+}
+
 function initialize_product(dataset){
-    // const deserialized_data = JSON.parse(dataset);
-    console.log(dataset);
+    const deserialized_data = JSON.parse(dataset);
+    if(deserialized_data != 0 && deserialized_data.data == 'success'){
+        window.location.href = "../product.html";
+    }
 }

@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="../../css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="../../css/style.css" type="text/css">
      <link rel="stylesheet" href="../../css/adminproduct.css" type="text/css">
+     <link rel="stylesheet" href="../../css/index.css" type="text/css">
 </head>
 
 <body>
@@ -42,7 +43,7 @@
                         <a href="../../index.html">
                             <img src="../../img/logo.png" alt="">
                         </a>
-                    </div>    
+                    </div>
                 </div>
                 <div class="col-lg-7 col-md-7">
 
@@ -89,18 +90,24 @@
                 <div class="col-lg-6 offset-lg-3">
                     <div class="login-form">
                         <h2>Add Product</h2>
-                        <form action="#" id="form_product">
+                        <form id="form_product" method="post" action="../../builder/bridge.php?request_type=db_insert_product" enctype="multipart/form-data" onsubmit="submitForm(this,  {c: initialize_product, o: null}); return false;">
+                            <div>
+                                <label for="product_img" style="display: flex; justify-content: center; margin: 60px 0px;">
+                                    <img src="../../uploads/products/camera.jpeg" class="profile-xxl mb-4 mt-4" id="ch_img_product">
+                                </label>
+                                <input type="file" name="product_image" style="display: none;" id="product_img" data-type="none" data-error="">
+                            </div>
                             <div class="group-input">
                                 <label for="product_name">Product Name</label>
-                                <input type="text" name="product_name" id="product_name">
+                                <input type="text" name="product_name" id="product_name" data-type="none" data-error="">
                             </div>
                             <div class="group-input">
                                 <label for="product_desc">Product Description</label>
-                                <input type="text" name="product_desc" id="product_desc">
+                                <input type="text" name="product_desc" id="product_desc" data-type="none" data-error="">
                             </div>
                             <div class="group-input">
                                 <label for="product_price">Product Price</label>
-                                <input type="number" name="product_price" id="product_price">
+                                <input type="number" name="product_price" id="product_price" data-type="number" data-error="Invalid price">
                             </div>
                             <div class="group-input">
                                 <label for="product_gender_cat">Product For</label>
@@ -139,19 +146,19 @@
                               </div>
                             <div class="group-input">
                                 <label for="product_brand">Product Brand</label>
-                                <input type="text" name="product_brand" id="product_brand">
+                                <input type="text" name="product_brand" id="product_brand" data-type="none" data-error="">
                             </div>
                             <div class="group-input">
                                 <label for="product_tags">Product Tags</label>
-                                <input type="text" name="product_tags" id="product_tags">
+                                <input type="text" name="product_tags" id="product_tags" data-type="none" data-error="">
                             </div>
                             <div class="group-input">
                                 <label for="product_color">Color</label>
-                                <input type="text" name="product_color" id="product_color">
+                                <input type="text" name="product_color" id="product_color" data-type="none" data-error="">
                             </div>
                             <div class="group-input">
                                 <label for="product_qty">Quantity</label>
-                                <input type="text" name="product_qty" id="product_qty">
+                                <input type="text" name="product_qty" id="product_qty" data-type="number" data-error="Invalid quantity">
                             </div>
                             <button type="submit" class="site-btn login-btn">Add</button>
                         </form>
@@ -219,8 +226,8 @@
     <script src="../../js/jquery.dd.min.js"></script>
     <script src="../../js/jquery.slicknav.js"></script>
     <script src="../../js/owl.carousel.min.js"></script>
+         <script src="../../js/functions.js"></script>
     <script src="../../js/main.js"></script>
-     <script src="../../js/functions.js"></script>
 </body>
 
 </html>

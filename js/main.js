@@ -309,21 +309,27 @@
     });
 
     function initialize_user(dataset){
-        const deserialized_data = JSON.parse(dataset);
-        const user_metadata = {
-            user_id: deserialized_data[0].user_id,
-            username: deserialized_data[0].username,
-            avatar: deserialized_data[0].avatar,
-            role: deserialized_data[0].role,
-            account_status: deserialized_data[0].account_status
-        };
+        if(JSON.parse(dataset).length != 0){
+            const deserialized_data = JSON.parse(dataset);
+            const user_metadata = {
+                user_id: deserialized_data[0].user_id,
+                username: deserialized_data[0].username,
+                avatar: deserialized_data[0].avatar,
+                role: deserialized_data[0].role,
+                account_status: deserialized_data[0].account_status
+            };
 
-        if(user_metadata.account_status == 'active'){
-            window.sessionStorage.setItem("user_metadata", JSON.stringify(user_metadata));
-            const path = (user_metadata.role == 'client')?"../htmlpages/shop.html":"../htmlpages/admin/admin.html";
-            window.location.href = path;
+            if(user_metadata.account_status == 'active'){
+                window.sessionStorage.setItem("user_metadata", JSON.stringify(user_metadata));
+                const path = (user_metadata.role == 'client')?"../htmlpages/shop.html":"../htmlpages/admin/admin.html";
+                window.location.href = path;
+            }else{
+                alert('Your account has been blocked');
+            }
         }else{
-            alert('Your account has been blocked');
+            $('#form_login').find('input').each(function(index, node){
+                toggle_input_state($(node), false, 'Invalid username / password');
+            });
         }
     }
 
@@ -363,7 +369,9 @@
     $("#uploadImage").change(function(){
         $("#f-profile").attr("src", window.URL.createObjectURL($(this)[0].files[0]));
     });
-
+    $("#product_img").change(function(){
+        $("#ch_img_product").attr("src", window.URL.createObjectURL($(this)[0].files[0]));
+    });
     $("#profile_avatar").click(function(){
         $("#form-edit").parent().css("display", "flex");
     });

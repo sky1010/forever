@@ -110,7 +110,25 @@ display: none;
     object-fit: cover;
 }
 
+.hero-image-xl{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    padding: 10px;
+    border: 2px solid #E69A3D;
+    object-fit: cover;
+}
+
 #form-edit p{
     line-height: unset;
     color: #000 !important;
+}
+
+.profile-xxl {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    padding: 10px;
+    border: 2px solid #E69A3D;
+    object-fit: cover;
 }

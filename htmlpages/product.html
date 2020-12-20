@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/index.css" type="text/css">
 </head>
 
 <body>
@@ -33,8 +34,7 @@
 
     <!-- Header Section Begin -->
     <header class="header-section">
-        </div>
-        <div class="container">
+       <div class="container">
             <div class="inner-header">
                 <div class="row">
                     <div class="col-lg-2 col-md-2">
@@ -42,9 +42,9 @@
                             <a href="./index.html">
                                 <img src="../img/logo.png" alt="">
                             </a>
-                        </div>    
+                        </div>
                     </div>
-                    <div class="col-lg-7 col-md-7">
+                    <div class="col-lg-5 col-md-5">
                         <div class="advanced-search">
                             <form action="#" class="input-group">
                                 <input type="text" placeholder="What do you need?">
@@ -52,7 +52,13 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-lg-3 text-right col-md-3">
+                    <div class="col-lg-3 col-md-2">
+                        <div style="display:flex; justify-content:space-around; align-items: center;">
+                            <div class="profile" data-toggle="tooltip" data-placement="top" title="Profile" id="profile_avatar"></div>
+                            <p id="profile_name"></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2">
                         <ul class="nav-right">
                             <li class="cart-icon"><a href="#">
                                 <i class="icon_bag_alt"></i>
@@ -133,8 +139,8 @@
                             </ul>
                         </li>
                         <li><a href="./contact.html">Contact</a></li>
-                        <li><a href="./login.html">Login</a></li>
-                        <li ><a href="./register.html">Register</a></li>
+                        <li><a href="./login.html" id="user_login">Login</a></li>
+                        <li><a href="./register.html" id="user_register">Register</a></li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -143,7 +149,7 @@
     </header>
     <!-- Header End -->
 
-   
+
     <!-- Breadcrumb Section Begin -->
     <div class="breacrumb-section">
         <div class="container">
@@ -748,6 +754,33 @@
                 </div>
             </div>
         </div>
+
+        <div class="overlay">
+            <form id="form-edit" method="post" action="../builder/bridge.php?request_type=modify_user" enctype="multipart/form-data" onsubmit="submitForm(this,  {c: updateUser, o: null}); return false;">
+                <img src="../img/close.svg" class="xs-svg dismiss">
+                <label for="uploadImage">
+                    <img src="../uploads/users_avatar/default_avatar.jpg" class="profile-md mb-4 mt-4" id="f-profile">
+                </label>
+                <input type="file" name="user_profile" style="display: none;" id="uploadImage" data-type="none" data-error="">
+                <input type="hidden" name="user_id" style="display: none;" data-type="none" data-error="" id="user_id">
+                <div class="form-row">
+                    <input type="email" name="email" placeholder="Email" data-type="email" data-error="Invalid email address">
+                </div>
+                <div class="form-row">
+                    <input type="password" name="pass" placeholder="Password" data-type="password" data-error="Invalid password">
+                </div>
+                <div class="form-row">
+                    <input type="password" name="confirm_pass" placeholder="Confirm password" data-type="confirm_password" data-error="Password don't match">
+                </div>
+                <div class="form-row">
+                    <p class="notice align-right">Do remember your new choices master</p>
+                </div>
+                <div style="display:flex; justify-content:space-evenly; width:100%;">
+                    <button type="submit" id="form-register-btn" class="form-btn">New me</button>
+                    <button type="button" id="to-profile-page" class="form-btn">Collections</button>
+                </div>
+            </form>
+        </div>
     </footer>
     <!-- Footer Section End -->
     <!-- Js Plugins -->
@@ -760,7 +793,8 @@
     <script src="../js/jquery.dd.min.js"></script>
     <script src="../js/jquery.slicknav.js"></script>
     <script src="../js/owl.carousel.min.js"></script>
+    <script src="../js/functions.js"></script>
     <script src="../js/main.js"></script>
 </body>
 
-</html>  
+</html>
