@@ -168,6 +168,20 @@
                 echo json_encode($e->getMessage());
             }
             break;
+
+            case 'allProducts':
+                try{
+                    //[ TODO ]
+                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                    $result = select($connection, 'SELECT * FROM tbl_product ', []);
+                    db_disconnect($connection);
+
+                    echo json_encode($result);
+
+                }catch(Exception $e){
+                    http_response_code(400);
+                }
+                break;
         default:
             // HTTTP CODE BAD REQUEST
             http_response_code(400);

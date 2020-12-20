@@ -3,11 +3,16 @@
 ******************************************/
 var userSnapshot;
 $(document).ready(function () {
- //    ajax(
- //     './builder/bridge.php',
- //     { request_type: 'allUsers'},
- //     {c: displayuser}
- // );
+//     ajax(
+//      '../../builder/bridge.php',
+//      { request_type: 'allUsers'},
+//      {c: displayuser}
+//  );
+//      ajax(
+//      '../../builder/bridge.php',
+//      { request_type: 'allProducts'},
+//      {c: displayproducts}
+//  );
 });
 
 
@@ -240,6 +245,60 @@ function updateUser(obj){
 function initialize_product(dataset){
     const deserialized_data = JSON.parse(dataset);
     if(deserialized_data != 0 && deserialized_data.data == 'success'){
-        window.location.href = "../product.html";
+        window.location.href = "adminproduct.html";
     }
 }
+function displayproducts (obj) {
+    const product_data = JSON.parse(obj)
+    // console.log(product_data);
+    for(var i = 0; i < product_data.length; i++){
+		var trNodeProduct = document.createElement("tr");
+        var prodNameNode = document.createElement("td");
+        var editTD = document.createElement("td");
+        var deleteTD = document.createElement("td");
+		var editNode = document.createElement("button");
+		var deleteNode =  document.createElement("button");
+
+		$(editNode).addClass("btn-dark");
+		$(deleteNode).addClass("btn-danger");
+
+		$(trNodeProduct).attr("id", product_data[i].product_id);
+		$(prodNameNode).text(product_data[i].prod_name );
+
+        
+		$(editNode).text("Edit");
+		$(editNode).attr("id", "btn-edit-"+product_data[i].product_id);
+		$(deleteNode).text("Delete");
+		$(deleteNode).attr("id", "btn-delete-"+product_data[i].product_id);
+
+
+        $(editTD).append(editNode);
+        $(deleteTD).append(deleteNode);
+		$(trNodeProduct).append(prodNameNode).append(editTD).append(deleteTD);
+		$("#product_dataset").append(trNodeProduct);
+
+
+		//------Button event to suspend status-----------
+		$("#btn-edit-"+product_data[i].product_id).click(function(){
+			// var userID = $(this).parent();
+            // emptyContent("#product_dataset");
+            // ajax(
+            //     '../../builder/bridge.php',
+            //     { request_type: 'update_user_suspended', data: $(userID).attr("id") },
+            //     {c: displayuser}
+            // );
+		});
+
+		$("#btn-approve-"+product_data[i].product_id).click(function(){
+			// var userID = $(this).parent();
+            // emptyContent("#product_dataset");
+            // ajax(
+            //     '../../builder/bridge.php',
+            //     { request_type: 'update_user_approved', data: $(userID).attr("id") },
+            //     {c: displayuser}
+            // );
+		});
+
+	}
+	// userSnapshot = $("#user_dataset").children();
+  }
