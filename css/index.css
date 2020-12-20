@@ -133,9 +133,9 @@ display: none;
     object-fit: cover;
 }
 
-#profile_avatar{
+/*#profile_avatar{
     display: none;
-}
+}*/
 
 .error-div{
     width: 400px;

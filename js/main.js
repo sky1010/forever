@@ -371,6 +371,7 @@
 
     $('#user_login').click(function(){
         $('#user_login').data('islogged', false);
+        $('#profile_avatar').css('display', 'none');
         window.sessionStorage.removeItem("user_metadata");
         window.location.href = "../htmlpages/login.html";
     });
