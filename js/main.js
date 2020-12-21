@@ -370,10 +370,13 @@
     });
 
     $('#user_login').click(function(){
+        var url_append = "../htmlpages/login.html";
         $('#user_login').data('islogged', false);
         $('#profile_avatar').css('display', 'none');
         window.sessionStorage.removeItem("user_metadata");
-        window.location.href = "../htmlpages/login.html";
+        if(window.location.pathname.split("/").pop() == "admin.html")
+            url_append = "../login.html";
+        window.location.href = url_append;
     });
 
     $("#to-profile-page").click(function(){
