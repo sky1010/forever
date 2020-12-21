@@ -290,6 +290,7 @@
     });
 
     $("#product_submit").click(function(){
+        $("#form_product").attr("action", "../../builder/bridge.php?request_type=update_product");
         event.preventDefault(); //prevent form submission
 
         if(form_valid($('#form_product'))){
@@ -356,7 +357,7 @@
                 split_path.shift();
                 user_metadata.avatar = split_path.join("/");
             }
-
+``
             $("#profile_avatar").css("background-image", "url('"+ user_metadata.avatar +"')");
             $("#profile_name").text(user_metadata.username);
             $("#f-profile").attr("src", user_metadata.avatar);
@@ -384,6 +385,18 @@
         window.location.href = "./profile.html";
     });
 
+    $("#product_update").click(function(){
+        $("#form_product").attr("action", "../../builder/bridge.php?request_type=db_update_product");
+        event.preventDefault();
+
+        if(form_valid($("#form_product"))){
+            $("#form_product").submit();
+        }else{
+            $("#form_product input").each(function(index, node){
+                toggle_input_state($(node), !!$(node).data('input_valid'));
+            });
+        }
+    });
     $("#uploadImage").change(function(){
         $("#f-profile").attr("src", window.URL.createObjectURL($(this)[0].files[0]));
     });

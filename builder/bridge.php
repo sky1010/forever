@@ -169,57 +169,95 @@
             }
             break;
 
-            case 'allProducts':
-                try{
-                    //[ TODO ]
-                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-                    $result = select($connection, 'SELECT * FROM tbl_product ', []);
-                    db_disconnect($connection);
+        case 'allProducts':
+            try{
+                //[ TODO ]
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                $result = select($connection, 'SELECT * FROM tbl_product ', []);
+                db_disconnect($connection);
 
-                    echo json_encode($result);
+                echo json_encode($result);
 
-                }catch(Exception $e){
-                    http_response_code(400);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
+
+        case 'delete_product':
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+
+                exec_sql(
+                    $connection,
+                    'DELETE FROM tbl_product WHERE product_id = ?',  [$_REQUEST['data']]
+                );
+
+                exec_sql(
+                    $connection,
+                    'DELETE FROM tbl_inventory WHERE product_id = ?',  [$_REQUEST['data']]
+                );
+
+                $result = select($connection, 'SELECT * FROM tbl_product ', []);
+                echo json_encode($result);
+
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
+
+        case 'get_product':
+            try{
+                //[ TODO ]
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                $result = select($connection, 'SELECT * FROM tbl_product p, tbl_inventory i WHERE p.product_id = i.product_id AND p.product_id = ?', [$_REQUEST['data']]);
+                db_disconnect($connection);
+
+                echo json_encode($result);
+
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
+        case 'db_update_product':
+            $target_file = null;
+            if(!empty($_FILES["product_image"]["tmp_name"])){
+                $target_dir = "./uploads/products/";
+                $target_file = $target_dir.basename($_FILES["product_image"]["name"]);
+            }
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                $trigger_update = true;
+                if(!empty($_FILES["product_image"]["tmp_name"])){
+                    if(!move_uploaded_file($_FILES["product_image"]["tmp_name"], "../".$target_file)){
+                        $trigger_update = false;
+                    }
                 }
-                break;
 
-                case 'delete_product':
-                    try{
-                        $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-    
-                        exec_sql(
-                            $connection,
-                            'DELETE FROM tbl_product WHERE product_id = ?',  [$_REQUEST['data']]
-                        );
+                if(!empty($_FILES["product_image"]["tmp_name"])){
+                    $arr = [$_REQUEST['product_name'], $_REQUEST['product_desc'], $_REQUEST['product_tags'], $_REQUEST['product_brand'], $target_file ,$_REQUEST['product_gender_cat'] , $_REQUEST['category'],  $_REQUEST['product_id']];
+                }else{
+                    $arr = [$_REQUEST['product_name'], $_REQUEST['product_desc'], $_REQUEST['product_tags'], $_REQUEST['product_brand'] ,$_REQUEST['product_gender_cat'] , $_REQUEST['category'],  $_REQUEST['product_id']];
+                }
 
-                        exec_sql(
-                            $connection,
-                            'DELETE FROM tbl_inventory WHERE product_id = ?',  [$_REQUEST['data']]
-                        );
-    
-                        $result = select($connection, 'SELECT * FROM tbl_product ', []);
-                        echo json_encode($result);
-    
-                        db_disconnect($connection);
-                        http_response_code(200);
-                    }catch(Exception $e){
-                        http_response_code(400);
-                    }
-                    break;
-                
-                case 'update_product':
-                    try{
-                        //[ TODO ]
-                        $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-                        $result = select($connection, 'SELECT * FROM tbl_product p, tbl_inventory i WHERE p.product_id = i.product_id AND p.product_id = ?', [$_REQUEST['data']]);
-                        db_disconnect($connection);
-        
-                        echo json_encode($result);
-        
-                    }catch(Exception $e){
-                        http_response_code(400);
-                    }
-                break;
+                if($trigger_update){
+                    exec_sql(
+                        $connection,
+                        'UPDATE tbl_product set prod_name = ?, prod_desc = ?, prod_tags = ?, prod_brand = ? '.(empty($_FILES["product_image"]["tmp_name"])?'':', prod_image = ?').' , prod_age_group = ?,cat_id = ? WHERE product_id = ?',
+                        $arr
+                    );
+
+                    // echo json_encode($result);
+                    echo json_encode(['data' => 'success']);
+
+                    db_disconnect($connection);
+                    http_response_code(200);
+                }
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
         default:
             // HTTTP CODE BAD REQUEST
             http_response_code(400);

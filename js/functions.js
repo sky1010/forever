@@ -42,22 +42,26 @@ $(document).ready(function () {
                 }
             });
               if(hasParam('id') == true){
+                $("#form_product input").each(function(index, node){
+                    $(node).data('input_valid', true);
+                });
 
                 $("#product_submit").css("display", "none");
                 $("#product_update").css("display", "block");
 
-                const queryString = window.location.search;  
+                const queryString = window.location.search;
                 const urlParams = new URLSearchParams(queryString);
                 const prod_id = urlParams.get('id');
+                $("#product_id").val(prod_id);
                 ajax(
                     '../../builder/bridge.php',
-                    { request_type: 'update_product', data:  prod_id},
+                    { request_type: 'get_product', data:  prod_id},
                     {c: updateproduct}
                 );
               }
           break;
         default:
-         
+
       }
 
 });
@@ -80,7 +84,7 @@ function validate_input(type, value){
         email: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         phone: /^5[0-9]{7}/,
         none: /.*/,
-        number: /[0-9]/,
+        number: /^[0-9]*$/,
         // construct a regex from the previous password field
         confirm_password: new RegExp($("[name='pass']").val())
     };
@@ -348,9 +352,7 @@ function displayproducts (obj) {
 
 function updateproduct(obj){
     const product_data = JSON.parse(obj);
-    console.log(product_data);
     $(document).ready(function () {
-        console.log(product_data[0]['prod_name']);
         $("#product_name").val(product_data[0]['prod_name']);
         $("#product_desc").val(product_data[0]['prod_desc']);
         $("#product_price").val(product_data[0]['inv_price']);
@@ -376,7 +378,7 @@ function updateproduct(obj){
             $( ".radio_btn_foot input" ).each(function(index, node){
                 if($(node).val() == product_data[0]['inv_size']){
                     $(node ).prop('checked',  true);
-                    
+
                 }
             });
         }else{
@@ -384,7 +386,7 @@ function updateproduct(obj){
             $(".radio_btn_cloth").css("display", "none");
         }
     });
-    
+
 }
 function hasParam(param){
     var field = param;

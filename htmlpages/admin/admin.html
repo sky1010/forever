@@ -91,7 +91,7 @@
                 <div class="col-lg-6 offset-lg-3">
                     <div class="login-form">
                         <h2>Add Product</h2>
-                        <form id="form_product" method="post" action="../../builder/bridge.php?request_type=db_insert_product" enctype="multipart/form-data" onsubmit="submitForm(this,  {c: initialize_product, o: null}); return false;">
+                        <form id="form_product" method="post" action="" enctype="multipart/form-data" onsubmit="submitForm(this,  {c: initialize_product, o: null}); return false;">
                             <div>
                                 <label for="product_img" style="display: flex; justify-content: center; margin: 60px 0px;">
                                     <img src="../../uploads/products/camera.jpeg" class="profile-xxl mb-4 mt-4" id="ch_img_product">
@@ -161,6 +161,7 @@
                                 <label for="product_qty">Quantity</label>
                                 <input type="text" name="product_qty" id="product_qty" data-type="number" data-error="Invalid quantity">
                             </div>
+                            <input type="hidden" name="product_id" id="product_id" data-type="none" data-error="">
                             <button type="submit" class="site-btn login-btn" id="product_submit">Add</button>
                             <button type="submit" class="site-btn login-btn" id="product_update">Update</button>
                         </form>
