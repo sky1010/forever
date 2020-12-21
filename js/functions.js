@@ -22,6 +22,40 @@ $(document).ready(function () {
                 {c: displayuser}
             );
           break;
+          case 'admin.html':
+
+            $("#product_submit").css("display", "block");
+            $("#product_update").css("display", "none");
+
+            $("#category").change(function() {
+                var selected_val = $('#category option:selected').text();
+                if (selected_val == 'Footwear') {
+                    $(".radio_btn_foot").css("display", "block");
+                    $(".radio_btn_cloth").css("display", "none");
+                }
+                else if (selected_val == 'Clothing') {
+                    $(".radio_btn_foot").css("display", "none");
+                    $(".radio_btn_cloth").css("display", "block");
+                }else{
+                    $(".radio_btn_foot").css("display", "none");
+                    $(".radio_btn_cloth").css("display", "none");
+                }
+            });
+              if(hasParam('id') == true){
+
+                $("#product_submit").css("display", "none");
+                $("#product_update").css("display", "block");
+
+                const queryString = window.location.search;  
+                const urlParams = new URLSearchParams(queryString);
+                const prod_id = urlParams.get('id');
+                ajax(
+                    '../../builder/bridge.php',
+                    { request_type: 'update_product', data:  prod_id},
+                    {c: updateproduct}
+                );
+              }
+          break;
         default:
          
       }
@@ -274,12 +308,8 @@ function displayproducts (obj) {
 
 
 		$("#btn-edit-"+product_data[i].product_id).click(function(){
-			var prodID = $(this).parent().parent();
-            ajax(
-                '../../builder/bridge.php',
-                { request_type: 'update_product', data: $(prodID).attr("id") },
-                {c: updateproduct}
-            );
+            var prodID = $(this).parent().parent();
+            window.location.href = "admin.html?id="+$(prodID).attr("id");
 		});
 
 		$("#btn-delete-"+product_data[i].product_id).click(function(){
@@ -318,11 +348,51 @@ function displayproducts (obj) {
 
 function updateproduct(obj){
     const product_data = JSON.parse(obj);
-    window.location.href = "admin.html";
-    // console.log('product_data');
+    console.log(product_data);
     $(document).ready(function () {
         console.log(product_data[0]['prod_name']);
-        console.log($("#product_name"));
         $("#product_name").val(product_data[0]['prod_name']);
+        $("#product_desc").val(product_data[0]['prod_desc']);
+        $("#product_price").val(product_data[0]['inv_price']);
+        $("#product_brand").val(product_data[0]['prod_brand']);
+        $("#product_tags").val(product_data[0]['prod_tags']);
+        $("#product_color").val(product_data[0]['inv_color']);
+        $("#product_qty").val(product_data[0]['inv_qoh']);
+        $('#ch_img_product').attr("src","../."+product_data[0]['prod_image']);
+        $("#category").val(product_data[0]['cat_id']);
+        $("#product_gender_cat").val(product_data[0]['prod_age_group']);
+        if ((product_data[0]['cat_id']) == 1){
+            $(".radio_btn_foot").css("display", "none");
+            $(".radio_btn_cloth").css("display", "block");
+            $( ".radio_btn_cloth input" ).each(function(index, node){
+                if($(node).val() == product_data[0]['inv_size']){
+                    $(node ).prop('checked',  true);
+                }
+            });
+        }else if ((product_data[0]['cat_id']) == 2) {
+            $(".radio_btn_foot").css("display", "block");
+            $(".radio_btn_cloth").css("display", "none");
+
+            $( ".radio_btn_foot input" ).each(function(index, node){
+                if($(node).val() == product_data[0]['inv_size']){
+                    $(node ).prop('checked',  true);
+                    
+                }
+            });
+        }else{
+            $(".radio_btn_foot").css("display", "none");
+            $(".radio_btn_cloth").css("display", "none");
+        }
     });
+    
+}
+function hasParam(param){
+    var field = param;
+    var url = window.location.href;
+    if(url.indexOf('?' + field + '=') != -1)
+        return true;
+    else if(url.indexOf('&' + field + '=') != -1)
+        return true;
+    return false
+
 }
