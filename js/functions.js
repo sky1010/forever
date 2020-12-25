@@ -413,9 +413,10 @@ function hasParam(param){
 
 function showProducts(obj){
     var deserialized_data = JSON.parse(obj);
-
+    var price = []; // GLOBAL price, holds all price from all products respectively
     console.log(deserialized_data);
     if(deserialized_data.length > 0){
+        $('#product_dataset, #cat_product, #cat_gender, product_brand').children().remove();
         for(var i = 0; i < deserialized_data.length; i++){
             var root_node = $('<div></div>').addClass("col-lg-4 col-sm-6").attr('data-product-id', deserialized_data[i].product_id);
             var product_item_node = $('<div></div>').addClass('product-item');
@@ -439,13 +440,39 @@ function showProducts(obj){
             $(root_node).append(product_item_node);
             $('#product_dataset').append(root_node);
 
-            if($('#cat_gender').find("input[id='"+ deserialized_data[i].prod_age_group +"']").length == 0){
+            var data_ref = deserialized_data[i].prod_age_group;
+            if($('#cat_gender').find("input[id='"+ data_ref +"']").length == 0){
                 var bc_item_node = $('<div></div>').addClass("bc-item");
-                var label_node = $('<label></label>').text(deserialized_data[i].prod_age_group).attr('for', deserialized_data[i].prod_age_group)
-                    .append($("<input type='checkbox'>").attr('id', deserialized_data[i].prod_age_group)).append($('<span></span>').addClass('checkmark'));
+                var label_node = $('<label></label>').text(data_ref).attr('for', data_ref)
+                    .append($("<input type='checkbox'>").attr('id', data_ref).attr('name', data_ref.toLowerCase()))
+                    .append($('<span></span>').addClass('checkmark'));
                 $(bc_item_node).append(label_node);
                 $('#cat_gender').append(bc_item_node);
             }
+
+            var data_ref = deserialized_data[i].cat_desc;
+            if($('#cat_product').find("input[id='"+ data_ref +"']").length == 0){
+                var bc_item_node = $('<div></div>').addClass("bc-item");
+                var label_node = $('<label></label>').text(data_ref).attr('for', data_ref)
+                    .append($("<input type='checkbox'>").attr('id', data_ref).attr('name', data_ref.toLowerCase()))
+                    .append($('<span></span>').addClass('checkmark'));
+                $(bc_item_node).append(label_node);
+                $('#cat_product').append(bc_item_node);
+            }
+
+            var data_ref = deserialized_data[i].prod_brand;
+            if($('#product_brand').find("input[id='"+ data_ref +"']").length == 0){
+                var bc_item_node = $('<div></div>').addClass("bc-item");
+                var label_node = $('<label></label>').text(data_ref).attr('for', data_ref)
+                    .append($("<input type='checkbox'>").attr('id', data_ref).attr('name', data_ref.toLowerCase()))
+                    .append($('<span></span>').addClass('checkmark'));
+                $(bc_item_node).append(label_node);
+                $('#product_brand').append(bc_item_node);
+            }
+
+            price.push(deserialized_data[i].inv_price);
+            //spread the array to single element using the spread operator
+            $('#range_slider').attr('data-min', Math.min(...price)).attr('data-max', Math.max(...price));
         }
     }
 }
