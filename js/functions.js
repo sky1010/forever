@@ -22,7 +22,7 @@ $(document).ready(function () {
                 {c: displayuser}
             );
           break;
-          case 'admin.html':
+        case 'admin.html':
 
             $("#product_submit").css("display", "block");
             $("#product_update").css("display", "none");
@@ -41,7 +41,8 @@ $(document).ready(function () {
                     $(".radio_btn_cloth").css("display", "none");
                 }
             });
-              if(hasParam('id') == true){
+
+            if(hasParam('id') == true){
                 $("#form_product input").each(function(index, node){
                     $(node).data('input_valid', true);
                 });
@@ -58,11 +59,17 @@ $(document).ready(function () {
                     { request_type: 'get_product', data:  prod_id},
                     {c: updateproduct}
                 );
-              }
-          break;
+            }
+            break;
+        case 'shop.html':
+            ajax(
+                '../builder/bridge.php',
+                { request_type: 'allProducts'},
+                {c: showProducts}
+            );
+            break;
         default:
-
-      }
+    }
 
 });
 
@@ -101,7 +108,7 @@ function toggle_input_state(input, state, err = null){
     //always remove previously injected element
     $(input).parent().find('.error').remove();
     $(input).data('input_valid', true);
-    const input_type_exception = ['file', 'checkbox', 'hidden', 'radio'];
+    const input_type_exception = ['file', 'checkbox', 'hidden', 'radio', 'color'];
 
     if(!state && !input_type_exception.includes($(input).attr('type'))){
         var error_node = document.createElement('p');
@@ -277,6 +284,7 @@ function updateUser(obj){
 }
 
 function initialize_product(dataset){
+    console.log(dataset);
     const deserialized_data = JSON.parse(dataset);
     if(deserialized_data != 0 && deserialized_data.data == 'success'){
         window.location.href = "adminproduct.html";
@@ -397,4 +405,37 @@ function hasParam(param){
         return true;
     return false
 
+}
+
+
+function showProducts(obj){
+    var deserialized_data = JSON.parse(obj);
+
+    console.log(deserialized_data);
+    if(deserialized_data.length > 0){
+        var search = {};
+        for(var i = 0; i < deserialized_data.length; i++){
+            var root_node = $('<div></div>').addClass("col-lg-4 col-sm-6").attr('data-product-id', deserialized_data[i].product_id);
+            var product_item_node = $('<div></div>').addClass('product-item');
+            var pi_pic_node = $('<div></div>').addClass("pi-pic");
+            var pi_text_div = $('<div></div>').addClass('pi-text');
+            var category_name = $('<div></div>').addClass('catagory-name').text(deserialized_data[i].cat_desc);
+            var product_price = $('<div></div>').addClass('product-price').text("MUR "+deserialized_data[i].inv_price);
+            var icon_node = $('<div></div>').addClass('icon').append($('<i class="icon_heart_alt"></i>'));
+            var sale_node = $('<div></div>').addClass('sale pp-sale').text('Sale');
+            var ul_node = $('<ul></ul>');
+            var li_node_first = $('<li></li>').addClass('w-icon active').append($('<a href="#"><i class="icon_bag_alt"></i></a>'));
+            var li_node_second = $('<li></li>').addClass('quick-view').append('<a href="#">+ Quick View</a>');
+            var li_node_third = $('<li></li>').addClass('w-icon').append($('<a href="#"><i class="fa fa-random"></i></a>'));
+            var pi_text_a = $("<a href='#'></a>").append($('<h5></h5>').text(deserialized_data[i].prod_name));
+            var img_node = $('<img>').attr('src', "." + deserialized_data[i].prod_image);
+
+            $(ul_node).append(li_node_first).append(li_node_second).append(li_node_third);
+            $(pi_pic_node).append(img_node).append(sale_node).append(icon_node).append(ul_node);
+            $(pi_text_div).append(category_name).append(pi_text_a).append(product_price);
+            $(product_item_node).append(pi_pic_node).append(pi_text_div);
+            $(root_node).append(product_item_node);
+            $('#product_dataset').append(root_node);
+        }
+    }
 }

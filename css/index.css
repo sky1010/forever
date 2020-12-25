@@ -160,3 +160,21 @@ display: none;
     padding: 0px 25%;
     text-align: center;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+.pointer{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 20;
+    display: none;
+    background-color: crimson;
+}
+
+.fw-subheader{
+    font-size: 12px;
+}

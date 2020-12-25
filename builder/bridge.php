@@ -131,7 +131,7 @@
                     exec_sql(
                         $connection,
                         'INSERT INTO tbl_inventory (inv_color, inv_size, inv_qoh, inv_price, product_id) VALUES (? , ?, ?, ?, ?)',
-                        [$_REQUEST['product_color'], $_REQUEST['clothing_size'], $_REQUEST['product_qty'], $_REQUEST['product_price'] , $result[0]['product_id'] ]
+                        [$_REQUEST['product_color'], array_key_exists('clothing_size', $_REQUEST)?$_REQUEST['clothing_size']:'', $_REQUEST['product_qty'], $_REQUEST['product_price'] , $result[0]['product_id'] ]
                     );
                     echo json_encode(['data' => 'success']);
 
@@ -173,7 +173,7 @@
             try{
                 //[ TODO ]
                 $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-                $result = select($connection, 'SELECT * FROM tbl_product ', []);
+                $result = select($connection, 'SELECT * FROM tbl_product p INNER JOIN tbl_category c ON p.cat_id = c.cat_id INNER JOIN tbl_inventory n ON p.product_id = n.product_id', []);
                 db_disconnect($connection);
 
                 echo json_encode($result);

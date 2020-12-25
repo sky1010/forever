@@ -290,10 +290,24 @@
     });
 
     $("#product_submit").click(function(){
-        $("#form_product").attr("action", "../../builder/bridge.php?request_type=update_product");
-        event.preventDefault(); //prevent form submission
+        $("#form_product").attr("action", "../../builder/bridge.php?request_type=db_insert_product");
+        event.preventDefault(); //prevent formproduct_name submission
 
         if(form_valid($('#form_product'))){
+            var tags = {
+                prod_name: $("[name='product_name']").val(),
+                prod_brand: $("[name='product_brand']").val(),
+                prod_category: $("[name='category']").val(),
+                prod_size: ($(".radio_btn_foot").css("display") == "none")?$("[name=clothing_size]").val():$("[name=foot_size]").val(),
+                prod_color: $("[name='product_color']").val(),
+                prod_price: $("[name='product_price']").val(),
+                prod_gender: $("[name='product_gender_cat']").val()
+            };
+
+            if($("[name='category']").val() > 2)
+                delete tags.prod_size;
+
+            $("[name='product_tags']").val(JSON.stringify(tags));
             $(this).submit();
         }else{
             $('#form_product').find('input').each(function(index, node){
