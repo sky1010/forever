@@ -148,8 +148,11 @@ function displayuser(obj){
 		var btnNode = document.createElement("button");
 		var suspendBtn =  document.createElement("button");
 
-		$(btnNode).addClass("btn-dark");
-		$(suspendBtn).addClass("btn-danger");
+		$(btnNode).addClass("btn btn-success");
+		$(suspendBtn).addClass("btn btn-danger");
+
+        $(btnNode).css('margin', '10px auto');
+        $(suspendBtn).css('margin', '10px auto');
 
 		$(trNode).attr("id", object[i].user_id);
 		$(usernameNode).text(object[i].username );
@@ -300,8 +303,8 @@ function displayproducts (obj) {
 		var editNode = document.createElement("button");
 		var deleteNode =  document.createElement("button");
 
-		$(editNode).addClass("btn-dark");
-		$(deleteNode).addClass("btn-danger");
+		$(editNode).addClass("btn btn-success");
+		$(deleteNode).addClass("btn btn-danger");
 
 		$(trNodeProduct).attr("id", product_data[i].product_id);
 		$(prodNameNode).text(product_data[i].prod_name );
@@ -413,7 +416,6 @@ function showProducts(obj){
 
     console.log(deserialized_data);
     if(deserialized_data.length > 0){
-        var search = {};
         for(var i = 0; i < deserialized_data.length; i++){
             var root_node = $('<div></div>').addClass("col-lg-4 col-sm-6").attr('data-product-id', deserialized_data[i].product_id);
             var product_item_node = $('<div></div>').addClass('product-item');
@@ -436,6 +438,14 @@ function showProducts(obj){
             $(product_item_node).append(pi_pic_node).append(pi_text_div);
             $(root_node).append(product_item_node);
             $('#product_dataset').append(root_node);
+
+            if($('#cat_gender').find("input[id='"+ deserialized_data[i].prod_age_group +"']").length == 0){
+                var bc_item_node = $('<div></div>').addClass("bc-item");
+                var label_node = $('<label></label>').text(deserialized_data[i].prod_age_group).attr('for', deserialized_data[i].prod_age_group)
+                    .append($("<input type='checkbox'>").attr('id', deserialized_data[i].prod_age_group)).append($('<span></span>').addClass('checkmark'));
+                $(bc_item_node).append(label_node);
+                $('#cat_gender').append(bc_item_node);
+            }
         }
     }
 }
