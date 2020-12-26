@@ -172,6 +172,21 @@ $(document).ready(function () {
                 );
             }
             break;
+        case 'collection.html':
+                if (sessionStorage.length != 0){
+                    const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+                    ajax(
+                        '../builder/bridge.php',
+                        { request_type: 'usercart', data:user_metadata.cart_id },
+                        {c: showusercart}
+                    );
+                    ajax(
+                        '../builder/bridge.php',
+                        { request_type: 'paid_item_list', cart_id:user_metadata.cart_id},
+                        {c: paid_item_list}
+                    );
+                }
+                break;
         default:
     }
 
@@ -1052,4 +1067,62 @@ function renderRelatedProduct(object){
             window.location.href = 'product.html';
         });
     }
+}
+
+function insertpayment(obj){
+    console.log(obj);
+}
+
+function paid_item_list(obj){
+    const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+    if(obj === "[]"){
+        // console.log('empty');
+        $('#total_shopping_cart').text('Rs 0');
+
+    }else{
+        // console.log('not empty');
+        const cart_data = JSON.parse(obj);
+        var sum = 0;
+        var inc_prod = 0;
+
+        for(var i = 0; i < cart_data.length; i++){
+            var tr_Node = $('<tr></tr>').attr('data-product-id', cart_data[i].product_id);
+            var td_cart_pic = $('<td></td>').addClass('cart-pic');
+            var img_node = $('<img>').attr('src', "." + cart_data[i].prod_image).attr('height','180px').attr('width', '180px');
+            var td_card_title = $('<td></td>').addClass('cart-title');
+            var h6_title =  $('<p></p>').text(cart_data[i].prod_name);
+            var price =  $('<td></td>').addClass('p-price ').text("Rs "+cart_data[i].product_price);
+            var td_qty =  $('<td></td>').addClass('qua-col');
+            var div_quantity = $('<div></div>').addClass('quantity');
+            var div_pro_qty = $('<div></div>').addClass('pro-qty');
+            var input = $('<input type="text" readonly>').val( cart_data[i].prod_qty);
+            var td_total = $('<td></td>').addClass('total-price').text('Rs ' +parseInt(cart_data[i].product_price * cart_data[i].prod_qty ));
+            var td_close =  $('<td></td>').addClass('close-td').text(cart_data[i].date_purchased);
+
+            $(td_cart_pic).append(img_node);
+            $(td_card_title).append(h6_title);
+            $(div_pro_qty).append(input);
+            $(div_quantity).append(div_pro_qty);
+            $(td_qty).append(div_quantity);
+            $(td_close);
+            $(tr_Node).append(td_cart_pic).append(td_card_title).append(price).append(td_qty).append(td_total).append(td_close)
+            $('#paid_dataset').append(tr_Node);
+            inc_prod = parseInt(cart_data[i].product_price * cart_data[i].prod_qty );
+            sum += inc_prod;
+
+
+            
+        }
+
+        $('#total_shopping_cart').text('Rs ' +sum);
+
+    }
+
+
+}
+
+function insertpaidproduct(obj){
+    console.log(obj);
+
+
 }
