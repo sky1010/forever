@@ -188,5 +188,25 @@ html {
     padding: 10px;
     border: 1px dashed black;
     border-radius: 10px;
-    margin: 20px 0px 100px 0px;
+    margin: 20px 0px 20px 0px;
+}
+
+
+.search_wrapper{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 60px;
+    background-color: rgba(255, 255, 255, 0.90);
+    position: sticky;
+    top: 0px;
+    z-index: 30;
+}
+
+.hidden{
+    display: none;
+}
+
+.show{
+    display: flex;
 }

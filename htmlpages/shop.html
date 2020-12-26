@@ -140,7 +140,7 @@
     <!-- Product Shop Section Begin -->
     <section class="product-shop spad">
         <div class="container">
-            <div style="width: 100%; display: flex; justify-content: center;">
+            <div class="search_wrapper">
                 <input type="text" name="seach_box" class="search">
             </div>
             <div class="row">
@@ -226,21 +226,26 @@
                         <div class="row">
                             <div class="col-lg-7 col-md-7">
                                 <div class="select-option">
-                                    <select class="sorting">
-                                        <option value="">Default Sorting</option>
+                                    <select class="sorting" id="sorting_options">
+                                        <option value="none">Default</option>
+                                        <option value="asc_price">By Price</option>
+                                        <option value="asc_name">By Name</option>
                                     </select>
-                                    <select class="p-show">
-                                        <option value="">Show:</option>
-                                    </select>
+                                    <select class="p-show" id="pagination_count_selector"></select>
                                 </div>
                             </div>
                             <div class="col-lg-5 col-md-5 text-right">
-                                <p>Show 01- 09 Of 36 Product</p>
+                                <p id="pagination_desc"></p>
                             </div>
                         </div>
                     </div>
                     <div class="product-list">
                         <div class="row" id="product_dataset"></div>
+                    </div>
+                    <div class="loading-more">
+                        <a href="#" id="load_more_product">
+                            MORE
+                        </a>
                     </div>
                 </div>
             </div>
