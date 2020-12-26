@@ -663,12 +663,12 @@ function showusercart(obj){
                         { request_type: 'cart_delete_product', data:$(prodID).attr("data-product-id"), cart_id:user_metadata.cart_id },
                         {c: showusercart}
                     );
-                    emptyContent("#shopping_dataset");
-                    ajax(
-                        'builder/bridge.php',
-                        { request_type: 'cart_delete_product', data:$(prodID).attr("data-product-id"), cart_id:user_metadata.cart_id },
-                        {c: shoppingusercart}
-                    );
+                    // emptyContent("#shopping_dataset");
+                    // ajax(
+                    //     'builder/bridge.php',
+                    //     { request_type: 'cart_delete_product', data:$(prodID).attr("data-product-id"), cart_id:user_metadata.cart_id },
+                    //     {c: shoppingusercart}
+                    // );
                 });
             }else{
                 $("#btn-remove-"+cart_data[i].product_id).click(function(){
@@ -703,27 +703,54 @@ function showusercart(obj){
 }
 
 function checkCart(obj, cart_id, prod_id){
-    console.log(cart_id, prod_id);
-    const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
-    // console.log(obj);
-    if(obj === "[]"){
-        const cart_data = JSON.parse(obj)
-        // console.log('Not exist');
-        emptyContent("#cart_dataset");
-        ajax(
-            '../builder/bridge.php',
-            { request_type: 'addtocart', cart_id:cart_id , prod_id:prod_id },
-            {c: showusercart}
-        );
+    var path = window.location.pathname;
+    var page = path.split("/").pop();
+    if (page == 'index.html'){
+        console.log(cart_id, prod_id);
+        const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+        // console.log(obj);
+        if(obj === "[]"){
+            const cart_data = JSON.parse(obj)
+            // console.log('Not exist');
+            emptyContent("#cart_dataset");
+            ajax(
+                'builder/bridge.php',
+                { request_type: 'addtocart', cart_id:cart_id , prod_id:prod_id },
+                {c: showusercart}
+            );
 
-    }else{
-        // console.log('exist');
-        emptyContent("#cart_dataset");
-        ajax(
-            '../builder/bridge.php',
-            { request_type: 'IncrementCart', cart_id:cart_id,  prod_id:prod_id},
-            {c: showusercart}
-        );
+        }else{
+            // console.log('exist');
+            emptyContent("#cart_dataset");
+            ajax(
+                'builder/bridge.php',
+                { request_type: 'IncrementCart', cart_id:cart_id,  prod_id:prod_id},
+                {c: showusercart}
+            );
+        }
+        }else{
+        console.log(cart_id, prod_id);
+        const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+        // console.log(obj);
+        if(obj === "[]"){
+            const cart_data = JSON.parse(obj)
+            // console.log('Not exist');
+            emptyContent("#cart_dataset");
+            ajax(
+                '../builder/bridge.php',
+                { request_type: 'addtocart', cart_id:cart_id , prod_id:prod_id },
+                {c: showusercart}
+            );
+
+        }else{
+            // console.log('exist');
+            emptyContent("#cart_dataset");
+            ajax(
+                '../builder/bridge.php',
+                { request_type: 'IncrementCart', cart_id:cart_id,  prod_id:prod_id},
+                {c: showusercart}
+            );
+        }
     }
 }
 
@@ -1159,7 +1186,7 @@ function build_index(object){
             if (sessionStorage.length != 0){
                 const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
                 ajax(
-                    '/builder/bridge.php',
+                    '../forever/builder/bridge.php',
                     { request_type: 'checkCart', cart_id:user_metadata.cart_id , prod_id:$(prodID).attr("data-product-id") },
                     {c: checkCart, o:[ user_metadata.cart_id ,$(prodID).attr("data-product-id")]}
                 );
