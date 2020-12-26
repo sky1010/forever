@@ -1112,7 +1112,7 @@ function paid_item_list(obj){
             sum += inc_prod;
 
 
-            
+
         }
 
         $('#total_shopping_cart').text('Rs ' +sum);
@@ -1184,7 +1184,7 @@ function build_index(object){
         loop: false,
         margin: 25,
         nav: true,
-        dots: true,
+        dots: false,
         navText: ['<i class="ti-angle-left"></i>', '<i class="ti-angle-right"></i>'],
         smartSpeed: 1200,
         autoHeight: false,
