@@ -999,7 +999,7 @@ function renderSpecificProduct(prod_object){
 
         }else{
             console.error('You must login');
-}
+        }
 
     });
 }
