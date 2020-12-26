@@ -675,19 +675,6 @@ function showusercart(obj){
         $('#sum_cart').text('Rs ' +sum);
         $('#sum_cart_2').text('Rs ' +sum);
 
-             $("#btn-remove-"+cart_data[i].product_id).click(function(){
-                var prodID = $(this).parent().parent();
-                emptyContent("#cart_dataset");
-                ajax(
-                    '../builder/bridge.php',
-                    { request_type: 'cart_delete_product', data:$(prodID).attr("data-cart-id"), cart_id:user_metadata.cart_id },
-                    {c: showusercart}
-                );
-            });
-
-        }
-        $('#sum_cart').text('Rs ' +sum);
-        $('#sum_cart_2').text('Rs ' +sum);
    }
 }
 
@@ -871,9 +858,6 @@ function paymentcart(obj){
     $('#total_payment').text('Rs ' +sum);
 
  
-}
-        );
-    }
 }
 
 function searchProduct(search_include){
