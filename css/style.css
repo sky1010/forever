@@ -525,11 +525,11 @@ ol {
 	position: relative;
 }
 
-.inner-header .nav-right li.cart-icon:hover .cart-hover {
+/*.inner-header .nav-right li.cart-icon:hover .cart-hover {
 	opacity: 1;
 	visibility: visible;
 	top: 60px;
-}
+}*/
 
 .inner-header .nav-right li.cart-icon a {
 	color: #252525;

@@ -460,6 +460,12 @@
         $(this).parent().parent().css("display", "none");
     });
 
+    $(".cart-icon").hover(function(){
+        $('.cart-hover').css({'opacity': '1','display': 'block', 'top': '30px'});
+    }, function(){
+        $('.cart-hover').css({'opacity': '1','display': 'none', 'top': '30px'});
+    });
+
     $('[data-toggle="tooltip"]').tooltip();
 
 })(jQuery);
