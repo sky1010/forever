@@ -374,14 +374,14 @@
 
         case 'IncrementShoppingCart':
             try{
-                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);        
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
                 exec_sql(
                     $connection,
                     'UPDATE tbl_product_cart SET prod_qty = ? WHERE cart_id = ? AND product_id = ?',
                     [$_REQUEST['prod_qty'], $_REQUEST['cart_id'], $_REQUEST['prod_id']]
                 );
-                
+
 
 
                 $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['cart_id']]);

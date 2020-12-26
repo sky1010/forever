@@ -88,8 +88,8 @@
                         <li><a href="./collection.html">Collection</a>
                         </li>
                         <li><a href="./contact.html">Contact</a></li>
-                        <li><a href="./login.html">Login</a></li>
-                        <li ><a href="./register.html">Register</a></li>
+                        <li ><a href="./login.html" id="user_login">Login</a></li>
+                        <li ><a href="./register.html" id="user_register">Register</a></li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -169,7 +169,7 @@
                                 <div class="order-btn">
                                     <!-- <button type="submit" class="site-btn place-btn">Place Order</button> -->
                                     <div id="paypal-button"></div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -317,8 +317,8 @@
                                             // Set up a payment
                                             payment: function(data, actions) {
                                             var fullname = $('#fn').val()+' '+$('#ln').val();
-                                            var street = $('#street').val(); 
-                                            var town = $('#town').val(); 
+                                            var street = $('#street').val();
+                                            var town = $('#town').val();
                                             var zip = $('#zip').val();
                                             var phone = $('#phone').val();
                                             var amount = $('#total_payment').text().replace( /^\D+/g, '');
@@ -397,9 +397,9 @@
                                             });
                                             }
                                         }, '#paypal-button');
-                                    }        
+                                    }
                                     </script>
 </body>
 
-</html>  
-   
+</html>
+

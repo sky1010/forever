@@ -55,31 +55,6 @@
     /*------------------
         Product Slider
     --------------------*/
-   $(".product-slider").owlCarousel({
-        loop: true,
-        margin: 25,
-        nav: true,
-        items: 4,
-        dots: true,
-        navText: ['<i class="ti-angle-left"></i>', '<i class="ti-angle-right"></i>'],
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: true,
-        responsive: {
-            0: {
-                items: 1,
-            },
-            576: {
-                items: 2,
-            },
-            992: {
-                items: 2,
-            },
-            1200: {
-                items: 3,
-            }
-        }
-    });
 
     /*------------------
        logo Carousel
@@ -467,5 +442,35 @@
     });
 
     $('[data-toggle="tooltip"]').tooltip();
+
+
+    // INDEX
+    $("#displaymen").click(function() {
+        $("#hero-img").css('background-image', "url(img/products/man-large.jpg)");
+        ajax(
+            'builder/bridge.php'+"?"+"minimum_price=25&maximum_price=1475&product_size=S, M, L&man=on",
+            { request_type: 'search_product'},
+            {c: build_index}
+        );
+    });
+
+    $("#displaywomen").click(function() {
+        $("#hero-img").css('background-image', "url(img/products/women-large.jpg)");
+        ajax(
+            'builder/bridge.php'+"?"+"minimum_price=25&maximum_price=1475&product_size=S, M, L&women=on",
+            { request_type: 'search_product'},
+            {c: build_index}
+        );
+    });
+
+    $("#displaykid").click(function() {
+        $("#hero-img").css('background-image', "url(img/products/banner-3.jpg)");
+        ajax(
+            'builder/bridge.php'+"?"+"minimum_price=25&maximum_price=1475&product_size=S, M, L&kid=on",
+            { request_type: 'search_product'},
+            {c: build_index}
+        );
+    });
+
 
 })(jQuery);
