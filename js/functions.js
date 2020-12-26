@@ -94,6 +94,7 @@ $(document).ready(function () {
                     {c: showusercart}
                 );
             }
+            $("#displaymen").click();
             break;
         case 'contact.html':
                 if (sessionStorage.length != 0){
@@ -132,8 +133,8 @@ $(document).ready(function () {
                             {c: showusercart}
                         );
                       });
-                      
-                    
+
+
                 }
             break;
             case 'check-out.html':
@@ -155,7 +156,7 @@ $(document).ready(function () {
                         {c: paymentcart}
                     );
                 }
-            break;        
+            break;
         case 'product.html':
             var product_id = window.localStorage.getItem('product_in_view');
             ajax(
@@ -678,7 +679,7 @@ function showusercart(obj){
                 });
             }
 
-            
+
         }
         $('#sum_cart').text('Rs ' +sum);
         $('#sum_cart_2').text('Rs ' +sum);
@@ -707,8 +708,8 @@ function checkCart(obj, cart_id, prod_id){
             '../builder/bridge.php',
             { request_type: 'IncrementCart', cart_id:cart_id,  prod_id:prod_id},
             {c: showusercart}
-        );   
-    }    
+        );
+    }
 }
 
 function shoppingusercart(obj){
@@ -768,7 +769,7 @@ function shoppingusercart(obj){
                     );
                 });
 
-            
+
         }
             var proQty = $('.pro-qty');
             proQty.prepend('<span class="dec qtybtn">-</span>');
@@ -792,7 +793,7 @@ function shoppingusercart(obj){
                         '../builder/bridge.php',
                         { request_type: 'IncrementShoppingCart', cart_id:user_metadata.cart_id,  prod_id:$(prodID).attr("data-product-id"), prod_qty:newVal},
                         {c: showusercart}
-                    );    
+                    );
                 } else {
                     // Don't allow decrementing below zero
                     if (oldValue > 1) {
@@ -809,7 +810,7 @@ function shoppingusercart(obj){
                             '../builder/bridge.php',
                             { request_type: 'IncrementShoppingCart', cart_id:user_metadata.cart_id,  prod_id:$(prodID).attr("data-product-id"), prod_qty:newVal},
                             {c: showusercart}
-                        );   
+                        );
                     } else {
                         newVal = 0;
                         var prodID = $(this).parent().parent().parent().parent();
@@ -861,11 +862,11 @@ function paymentcart(obj){
         $(li_normal).append(span_p);
         $('#payment_cart_dataset').append(li_normal);
 
-        sum += inc_prod;        
+        sum += inc_prod;
     }
     $('#total_payment').text('Rs ' +sum);
 
- 
+
 }
 
 function searchProduct(search_include){
@@ -1052,4 +1053,83 @@ function renderRelatedProduct(object){
             window.location.href = 'product.html';
         });
     }
+}
+
+
+function build_index(object){
+    var deserialized_data = JSON.parse(object);
+
+    $('#product_exhibit').children().remove();
+    for(var i = 0; i < deserialized_data.length; i++){
+        var root_node = $('<div></div>').addClass("col-lg-3 col-sm-6").attr('data-product-id', deserialized_data[i].product_id).css('max-width', '100%');
+        var product_item_node = $('<div></div>').addClass('product-item');
+        var pi_pic_node = $('<div></div>').addClass("pi-pic");
+        var pi_text_div = $('<div></div>').addClass('pi-text');
+        var category_name = $('<div></div>').addClass('catagory-name').text(deserialized_data[i].cat_desc);
+        var product_price = $('<div></div>').addClass('product-price').text("MUR "+deserialized_data[i].inv_price);
+        var sale_node = $('<div></div>').addClass('sale pp-sale').text('Sale');
+        var ul_node = $('<ul></ul>');
+        var li_node_first = $('<li></li>').addClass('w-icon active').append($('<a id= "product_id_'+ deserialized_data[i].product_id+ '" href="#"><i class="icon_bag_alt"></i></a>'));
+        var li_node_second = $('<li></li>').addClass('quick-view').append($('<a href="#">+ Quick View</a>').attr('id', deserialized_data[i].product_id));
+        var pi_text_a = $("<a href='#'></a>").append($('<h5></h5>').text(deserialized_data[i].prod_name));
+        var img_node = $('<img>').attr('src', deserialized_data[i].prod_image);
+
+        $(ul_node).append(li_node_first).append(li_node_second);
+        $(pi_pic_node).append(img_node).append(sale_node).append(ul_node);
+        $(pi_text_div).append(category_name).append(pi_text_a).append(product_price);
+        $(product_item_node).append(pi_pic_node).append(pi_text_div);
+        $(root_node).append(product_item_node);
+        $('#product_exhibit').append(root_node);
+
+        $("#product_id_"+deserialized_data[i].product_id).click(function(event){
+            event.preventDefault();
+            var prodID = $(this).parent().parent().parent().parent().parent();
+            if (sessionStorage.length != 0){
+                const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+                ajax(
+                    '/builder/bridge.php',
+                    { request_type: 'checkCart', cart_id:user_metadata.cart_id , prod_id:$(prodID).attr("data-product-id") },
+                    {c: checkCart, o:[ user_metadata.cart_id ,$(prodID).attr("data-product-id")]}
+                );
+
+            }else{
+                console.error('You must login');
+            }
+
+        });
+
+        $(li_node_second).find('a').click(function(){
+            event.preventDefault();
+            console.log($(this));
+            window.localStorage.setItem('product_in_view', $(this).attr('id'));
+            window.location.href = 'htmlpages/product.html';
+        });
+    }
+
+    $(".product-slider").trigger('destroy.owl.carousel');
+    $('.product-slider').find('.owl-stage-outer').children().unwrap();
+    $(".product-slider").owlCarousel({
+        loop: false,
+        margin: 25,
+        nav: true,
+        dots: true,
+        navText: ['<i class="ti-angle-left"></i>', '<i class="ti-angle-right"></i>'],
+        smartSpeed: 1200,
+        autoHeight: false,
+        autoplay: true,
+        responsive: {
+            0: {
+                items: 1,
+            },
+            576: {
+                items: 2,
+            },
+            992: {
+                items: 2,
+            },
+            1200: {
+                items: 3,
+            }
+        }
+    });
 }
