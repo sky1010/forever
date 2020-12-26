@@ -30,11 +30,11 @@
         case 'db_insert_user':
             try{
                 $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-
                 exec_sql(
                     $connection,
-                    'INSERT INTO tbl_user (username, password, email_address, account_status, avatar, role) VALUES (? , ?, ?, ?, ?, ?)',
-                    [$_REQUEST['username'], $_REQUEST['pass'], $_REQUEST['email'], 'active', '../uploads/users_avatar/default_avatar.jpg', 'client']
+                    'INSERT INTO tbl_user (username, password, email_address, firstname, lastname, country, street_address, postal_code, town, phone_number,account_status, avatar, role) VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    [$_REQUEST['username'], $_REQUEST['pass'], $_REQUEST['email'], $_REQUEST['firstname'], $_REQUEST['lastname'], $_REQUEST['country'], $_REQUEST['address'],
+                    $_REQUEST['zipcode'], $_REQUEST['town'], $_REQUEST['number'], 'active', '../uploads/users_avatar/default_avatar.jpg', 'client']
                 );
                 
                 $user_id = select($connection, 'SELECT user_id FROM tbl_user WHERE username = ?', [$_REQUEST['username']]);
@@ -357,6 +357,63 @@
                         }catch(Exception $e){
                             http_response_code(400);
                         }
+        break;
+
+        case 'IncrementShoppingCart':
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);        
+
+                exec_sql(
+                    $connection,
+                    'UPDATE tbl_product_cart SET prod_qty = ? WHERE cart_id = ? AND product_id = ?',
+                    [$_REQUEST['prod_qty'], $_REQUEST['cart_id'], $_REQUEST['prod_id']]
+                );
+                
+
+
+                $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['cart_id']]);
+                echo json_encode($result);
+
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+        break;
+
+        case 'deleteAll':
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+
+                exec_sql(
+                    $connection,
+                    'DELETE FROM tbl_product_cart WHERE cart_id = ?',  [$_REQUEST['data']]
+                );
+
+
+                $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['data']]);
+                echo json_encode($result);
+
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
+
+            case 'fetchuserpayment':
+                try{
+                    //[ TODO ]
+                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                    $result = select($connection, 'SELECT * FROM tbl_user WHERE user_id = ? ',[$_REQUEST['data']]);
+                    db_disconnect($connection);
+
+                    echo json_encode($result);
+
+                }catch(Exception $e){
+                    http_response_code(400);
+                }
+
         break;
 
         case 'search_product':
