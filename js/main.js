@@ -366,7 +366,11 @@
 
     $("#to-profile-page").click(function(){
         $("#form-edit").parent().css("display", "flex");
-        window.location.href = "./profile.html";
+        if(window.location.pathname.split('/').pop() == 'index.html'){
+            window.location.href = "htmlpages/collection.html";
+        }else{
+            window.location.href = "collection.html";
+        }
     });
 
     $("#product_update").click(function(){

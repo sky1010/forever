@@ -200,7 +200,7 @@ html {
     background-color: rgba(255, 255, 255, 0.90);
     position: sticky;
     top: 0px;
-    z-index: 30;
+    z-index: 3;
 }
 
 .hidden{
