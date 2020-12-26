@@ -149,7 +149,6 @@
         $(this).html(event.strftime("<div class='cd-item'><span>%D</span> <p>Days</p> </div>" + "<div class='cd-item'><span>%H</span> <p>Hrs</p> </div>" + "<div class='cd-item'><span>%M</span> <p>Mins</p> </div>" + "<div class='cd-item'><span>%S</span> <p>Secs</p> </div>"));
     });
 
-
     /*----------------------------------------------------
      Language Flag js
     ----------------------------------------------------*/
@@ -207,11 +206,6 @@
 
     }, 500);
 
-    /*-------------------
-		Nice Select
-    --------------------- */
-    $('.sorting, .p-show').niceSelect();
-
     /*------------------
 		Single Product
 	--------------------*/
@@ -225,8 +219,6 @@
 			$('.zoomImg').attr({src: imgurl});
 		}
 	});
-
-    $('.product-pic-zoom').zoom();
 
     /*-------------------
 		Quantity change
@@ -429,8 +421,29 @@
         ajax(
             '../builder/bridge.php'+"?"+serialized_form,
             { request_type: 'search_product'},
-            {c: showProducts, o: true}
+            {c: showProducts, o: [true]}
         );
+    });
+
+    $("[name='seach_box']").keyup(function(e){
+        searchProduct($(this).val());
+    });
+
+    $("#sorting_options").change(function(){
+        sortDom($(this).val());
+    });
+
+    $('#load_more_product').click(function(e){
+        e.preventDefault();
+        $("#product_dataset .hidden").first().css('display', 'flex').removeClass('hidden');
+
+        if($("#product_dataset .hidden").length == 0){
+            $(this).parent().addClass('hidden');
+        }
+    });
+
+    $('#pagination_count_selector').change(function(){
+        reloadDOM(paginateDOM(product_, "#product_dataset", $(this).val()), "#product_dataset");
     });
 
     $("#uploadImage").change(function(){
