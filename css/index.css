@@ -183,3 +183,10 @@ html {
     color: ;
 }
 */
+.search{
+    width: 300px;
+    padding: 10px;
+    border: 1px dashed black;
+    border-radius: 10px;
+    margin: 20px 0px 100px 0px;
+}

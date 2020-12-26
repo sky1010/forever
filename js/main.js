@@ -190,20 +190,22 @@
             max: maxPrice,
     		values: [minPrice, maxPrice],
     		slide: function (event, ui) {
-    			minamount.val('$' + ui.values[0]);
-    			maxamount.val('$' + ui.values[1]);
+    			minamount.val(ui.values[0]);
+    			maxamount.val(ui.values[1]);
     		}
     	});
-    	minamount.val('$' + rangeSlider.slider("values", 0));
-        maxamount.val('$' + rangeSlider.slider("values", 1));
+    	minamount.val(rangeSlider.slider("values", 0));
+        maxamount.val(rangeSlider.slider("values", 1));
+
+        /*-------------------
+            Radio Btn
+        --------------------- */
+        $(".fw-size-choose .sc-item label, .pd-size-choose .sc-item label").on('click', function () {
+            $(".fw-size-choose .sc-item label, .pd-size-choose .sc-item label").removeClass('active');
+            $(this).addClass('active');
+        });
+
     }, 500);
-    /*-------------------
-		Radio Btn
-	--------------------- */
-    $(".fw-size-choose .sc-item label, .pd-size-choose .sc-item label").on('click', function () {
-        $(".fw-size-choose .sc-item label, .pd-size-choose .sc-item label").removeClass('active');
-        $(this).addClass('active');
-    });
 
     /*-------------------
 		Nice Select
@@ -298,7 +300,7 @@
             var tags = {
                 prod_name: $("[name='product_name']").val(),
                 prod_brand: $("[name='product_brand']").val(),
-                prod_category: $("[name='category']").val(),
+                prod_category: $("[name='category'] option:selected").text(),
                 prod_size: ($(".radio_btn_foot").css("display") == "none")?$("[name=clothing_size]").val():$("[name=foot_size]").val(),
                 prod_color: $("[name='product_color']").val(),
                 prod_price: $("[name='product_price']").val(),
@@ -316,7 +318,6 @@
             })
         }
     });
-
 
     $("#form_login").on("submit", function(event){
         event.preventDefault();
@@ -413,6 +414,25 @@
             });
         }
     });
+
+    $("#submit_search_form").click(function(event){
+        event.preventDefault();
+        var serialized_form = $("#search_form").serialize();
+
+        if($("#product_size input[type='radio']:checked").length != 0){
+            serialized_form += '&product_size=' + $("#product_size input[type='radio']:checked").val();
+        }else{
+            serialized_form += "&product_size=S, M, L";
+        }
+
+        console.log(serialized_form);
+        ajax(
+            '../builder/bridge.php'+"?"+serialized_form,
+            { request_type: 'search_product'},
+            {c: showProducts, o: true}
+        );
+    });
+
     $("#uploadImage").change(function(){
         $("#f-profile").attr("src", window.URL.createObjectURL($(this)[0].files[0]));
     });

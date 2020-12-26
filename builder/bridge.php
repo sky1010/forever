@@ -139,7 +139,7 @@
                     exec_sql(
                         $connection,
                         'INSERT INTO tbl_inventory (inv_color, inv_size, inv_qoh, inv_price, product_id) VALUES (? , ?, ?, ?, ?)',
-                        [$_REQUEST['product_color'], array_key_exists('clothing_size', $_REQUEST)?$_REQUEST['clothing_size']:'', $_REQUEST['product_qty'], $_REQUEST['product_price'] , $result[0]['product_id'] ]
+                        [$_REQUEST['product_color'], array_key_exists('clothing_size', $_REQUEST)?$_REQUEST['clothing_size']:'S', $_REQUEST['product_qty'], $_REQUEST['product_price'] , $result[0]['product_id'] ]
                     );
                     echo json_encode(['data' => 'success']);
 
@@ -359,6 +359,47 @@
                         }
         break;
 
+        case 'search_product':
+            $keys = array_keys($_REQUEST);
+            $arr = null;
+
+            $filtered_keys = array_filter($keys, function($value){
+                $exclusion = ['request_type', 'minimum_price', 'maximum_price', 'S', 'M', 'L', 'product_size'];
+                return !in_array($value, $exclusion);
+            });
+
+            $products_size = explode(', ', $_REQUEST['product_size']);
+            $number_of_params = explode(' ', str_repeat('? ', count($products_size)));
+            array_pop($number_of_params);
+
+            if(!empty($filtered_keys)){
+                $filtered_keys = array_map(function($value){
+                    return '%'.$value.'%';
+                }, $filtered_keys);
+
+                $condition = 'WHERE prod_tags LIKE ';
+                $condition .= implode(' OR prod_tags LIKE ', array_fill(0, count($filtered_keys), '?'));
+                $condition .= ' AND inv_price BETWEEN ? AND ? AND inv_size IN ( '.implode(', ', $number_of_params).' )';
+                $arr = array_merge($filtered_keys, [$_REQUEST['minimum_price'], $_REQUEST['maximum_price']], $products_size);
+            }else{
+                $condition = 'WHERE inv_price BETWEEN ? AND ? AND inv_size IN ( '.implode(', ', $number_of_params).' )';
+                $arr = array_merge([$_REQUEST['minimum_price'], $_REQUEST['maximum_price']], $products_size);
+            }
+
+            try{
+                //[ TODO ]
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                $result = select($connection,
+                    'SELECT * FROM tbl_product p INNER JOIN tbl_inventory n ON p.product_id = n.product_id INNER JOIN tbl_category c
+                    ON p.cat_id = c.cat_id '.$condition, $arr);
+                db_disconnect($connection);
+
+                echo json_encode($result);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+
+            break;
         default:
 
             // HTTTP CODE BAD REQUEST
