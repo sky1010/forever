@@ -345,7 +345,8 @@
                 username: deserialized_data[0].username,
                 avatar: deserialized_data[0].avatar,
                 role: deserialized_data[0].role,
-                account_status: deserialized_data[0].account_status
+                account_status: deserialized_data[0].account_status,
+                cart_id: deserialized_data[0].cart_id
             };
 
             if(user_metadata.account_status == 'active'){

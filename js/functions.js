@@ -27,6 +27,9 @@ $(document).ready(function () {
             $("#product_submit").css("display", "block");
             $("#product_update").css("display", "none");
 
+            $("#add_text_product").css("display", "block");
+            $("#update_text_product").css("display", "none");
+
             $("#category").change(function() {
                 var selected_val = $('#category option:selected').text();
                 if (selected_val == 'Footwear') {
@@ -50,6 +53,9 @@ $(document).ready(function () {
                 $("#product_submit").css("display", "none");
                 $("#product_update").css("display", "block");
 
+                $("#add_text_product").css("display", "none");
+                $("#update_text_product").css("display", "block");
+
                 const queryString = window.location.search;
                 const urlParams = new URLSearchParams(queryString);
                 const prod_id = urlParams.get('id');
@@ -67,6 +73,13 @@ $(document).ready(function () {
                 { request_type: 'allProducts'},
                 {c: showProducts}
             );
+            const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+            // console.log(user_metadata.cart_id);
+            ajax(
+                '../builder/bridge.php',
+                { request_type: 'usercart', data:user_metadata.cart_id },
+                {c: showusercart}
+            );
             break;
         default:
     }
@@ -78,7 +91,10 @@ $(document).ready(function () {
 function ajax(url, data, parameters){
     $.ajax({ url: url, data: data})
     .done(function(data){
-        parameters.c(data);
+        if(parameters.hasOwnProperty('o'))
+            parameters.c(data, ...parameters.o);
+        else
+            parameters.c(data);
     });
 }
 
@@ -414,7 +430,7 @@ function hasParam(param){
 function showProducts(obj){
     var deserialized_data = JSON.parse(obj);
     var price = []; // GLOBAL price, holds all price from all products respectively
-    console.log(deserialized_data);
+    // console.log(deserialized_data);
     if(deserialized_data.length > 0){
         $('#product_dataset, #cat_product, #cat_gender, product_brand').children().remove();
         for(var i = 0; i < deserialized_data.length; i++){
@@ -424,17 +440,15 @@ function showProducts(obj){
             var pi_text_div = $('<div></div>').addClass('pi-text');
             var category_name = $('<div></div>').addClass('catagory-name').text(deserialized_data[i].cat_desc);
             var product_price = $('<div></div>').addClass('product-price').text("MUR "+deserialized_data[i].inv_price);
-            var icon_node = $('<div></div>').addClass('icon').append($('<i class="icon_heart_alt"></i>'));
             var sale_node = $('<div></div>').addClass('sale pp-sale').text('Sale');
             var ul_node = $('<ul></ul>');
-            var li_node_first = $('<li></li>').addClass('w-icon active').append($('<a href="#"><i class="icon_bag_alt"></i></a>'));
+            var li_node_first = $('<li></li>').addClass('w-icon active').append($('<a id= "product_id_'+ deserialized_data[i].product_id+ '" href="#"><i class="icon_bag_alt"></i></a>'));
             var li_node_second = $('<li></li>').addClass('quick-view').append('<a href="#">+ Quick View</a>');
-            var li_node_third = $('<li></li>').addClass('w-icon').append($('<a href="#"><i class="fa fa-random"></i></a>'));
             var pi_text_a = $("<a href='#'></a>").append($('<h5></h5>').text(deserialized_data[i].prod_name));
             var img_node = $('<img>').attr('src', "." + deserialized_data[i].prod_image);
 
-            $(ul_node).append(li_node_first).append(li_node_second).append(li_node_third);
-            $(pi_pic_node).append(img_node).append(sale_node).append(icon_node).append(ul_node);
+            $(ul_node).append(li_node_first).append(li_node_second);
+            $(pi_pic_node).append(img_node).append(sale_node).append(ul_node);
             $(pi_text_div).append(category_name).append(pi_text_a).append(product_price);
             $(product_item_node).append(pi_pic_node).append(pi_text_div);
             $(root_node).append(product_item_node);
@@ -473,6 +487,104 @@ function showProducts(obj){
             price.push(deserialized_data[i].inv_price);
             //spread the array to single element using the spread operator
             $('#range_slider').attr('data-min', Math.min(...price)).attr('data-max', Math.max(...price));
+            
+
+            $("#product_id_"+deserialized_data[i].product_id).click(function(event){ 
+                event.preventDefault();
+                var prodID = $(this).parent().parent().parent().parent().parent();
+                if (sessionStorage.length != 0){
+                    const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+                    ajax(
+                        '../builder/bridge.php',
+                        { request_type: 'checkCart', cart_id:user_metadata.cart_id , prod_id:$(prodID).attr("data-product-id") },
+                        {c: checkCart, o:[ user_metadata.cart_id ,$(prodID).attr("data-product-id")]}
+                    );
+                   
+                }else{
+                    console.error('You must login');
+                }
+               
+            });
         }
     }
+}
+
+
+function showusercart(obj){
+
+    // console.log(obj);
+    const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+    if(obj === "[]"){
+        // console.log('empty');
+        $('#card_count').text('0');
+        $('#sum_cart').text('Rs 0' );
+        $('#sum_cart_2').text('Rs 0' );
+    }else{
+        // console.log('not empty');
+        const cart_data = JSON.parse(obj);
+        // console.log(cart_data);
+        $('#card_count').text(cart_data.length);
+        var sum = 0;
+        var inc_prod = 0;
+        for(var i = 0; i < cart_data.length; i++){
+            var tr_Node = $('<tr></tr>').attr('data-cart-id', cart_data[i].product_id);
+            var td_si_pic = $('<td></td>').addClass('si-pic');
+            var img_node = $('<img>').attr('src', "." + cart_data[i].prod_image).attr('height','90px').attr('width', '90px');
+            var td_si_text = $('<td></td>').addClass("si-text");
+            var product_selected_div = $('<div></div>').addClass('product-selected');
+            inc_prod = parseInt(cart_data[i].inv_price * cart_data[i].prod_qty );
+            var c_price = $('<p></p>').text("Rs "+cart_data[i].inv_price+ ' x '+ cart_data[i].prod_qty);
+            var c_name = $('<h6></h6>').text(cart_data[i].prod_name);
+            var td_close = $('<td></td>').addClass('si-close');
+            var li_close = $('<li></li>').addClass('ti-close').attr("id", "btn-remove-"+cart_data[i].product_id);
+
+            $(td_si_pic).append(img_node);
+            $(product_selected_div).append(c_price).append(c_name);
+            $(td_si_text).append(product_selected_div);
+            $(td_close).append(li_close);
+            $(tr_Node).append(td_si_pic).append(td_si_text).append(td_close);
+            $('#cart_dataset').append(tr_Node);
+             sum += inc_prod;
+
+             $("#btn-remove-"+cart_data[i].product_id).click(function(){
+                var prodID = $(this).parent().parent();
+                emptyContent("#cart_dataset");
+                ajax(
+                    '../builder/bridge.php',
+                    { request_type: 'cart_delete_product', data:$(prodID).attr("data-cart-id"), cart_id:user_metadata.cart_id },
+                    {c: showusercart}
+                );
+            });
+            
+        }
+        $('#sum_cart').text('Rs ' +sum);
+        $('#sum_cart_2').text('Rs ' +sum);
+
+
+
+   }
+}
+
+function checkCart(obj, cart_id, prod_id){
+    const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+    // console.log(obj);
+    if(obj === "[]"){
+        const cart_data = JSON.parse(obj)
+        // console.log('Not exist');
+        emptyContent("#cart_dataset");
+        ajax(
+            '../builder/bridge.php',
+            { request_type: 'addtocart', cart_id:cart_id , prod_id:prod_id },
+            {c: showusercart}
+        );        
+
+    }else{
+        // console.log('exist');
+        emptyContent("#cart_dataset");
+        ajax(
+            '../builder/bridge.php',
+            { request_type: 'IncrementCart', cart_id:cart_id,  prod_id:prod_id},
+            {c: showusercart}
+        );   
+    }    
 }
