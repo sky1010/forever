@@ -304,8 +304,6 @@
     });
 
     function initialize_user(dataset){
-        $("#account_suspended").parent().css("display", "none");
-
         if(JSON.parse(dataset).length != 0){
             const deserialized_data = JSON.parse(dataset);
             const user_metadata = {
@@ -324,7 +322,9 @@
                 const path = (user_metadata.role == 'client')?"../htmlpages/shop.html":"../htmlpages/admin/admin.html";
                 window.location.href = path;
             }else{
-                $("#account_suspended").parent().css("display", "flex");
+                $("#toast-cart").html('<i class="fa fa-exclamation-triangle"></i>  This account was suspended');
+                $("#toast-cart").fadeIn(500);
+                setTimeout(function(){$("#toast-cart").fadeOut(500);}, 10000);
             }
         }else{
             $('#form_login').find('input').each(function(index, node){

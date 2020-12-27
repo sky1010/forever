@@ -587,7 +587,9 @@ function showProducts(obj, inject_prod_only = false){
                         setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
 
                     }else{
-                        $("#log_account").parent().css("display", "flex");
+                        $("#toast-cart").html('<i class="fa fa-exclamation-triangle"></i>   You must be logged in <a href="htmlpages/login.html" class="btn btn-dark" style="width: fit-content;margin: auto;">LOGIN</a>');
+                        $("#toast-cart").fadeIn(500);
+                        setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
                     }
                 });
 
@@ -1045,7 +1047,9 @@ function renderSpecificProduct(prod_object){
             );
 
         }else{
-            $("#log_account").parent().css("display", "flex");
+            $("#toast-cart").html('<i class="fa fa-exclamation-triangle"></i>   You must be logged in <a href="htmlpages/login.html" class="btn btn-dark" style="width: fit-content;margin: auto;">LOGIN</a>');
+            $("#toast-cart").fadeIn(500);
+            setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
         }
 
     });
@@ -1087,7 +1091,9 @@ function renderRelatedProduct(object){
                 );
 
             }else{
-                $("#log_account").parent().css("display", "flex");
+                $("#toast-cart").html('<i class="fa fa-exclamation-triangle"></i>   You must be logged in <a href="htmlpages/login.html" class="btn btn-dark" style="width: fit-content;margin: auto;">LOGIN</a>');
+                $("#toast-cart").fadeIn(500);
+                setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
             }
 
         });
@@ -1199,7 +1205,9 @@ function build_index(object){
                 $("#toast-cart").fadeIn(500);
                 setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
             }else{
-                $("#log_account").parent().css("display", "flex");
+                $("#toast-cart").html('<i class="fa fa-exclamation-triangle"></i>   You must be logged in <a href="htmlpages/login.html" class="btn btn-dark" style="width: fit-content;margin: auto;">LOGIN</a>');
+                $("#toast-cart").fadeIn(500);
+                setTimeout(function(){$("#toast-cart").fadeOut(500);}, 10000);
             }
 
         });
