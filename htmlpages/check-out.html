@@ -214,6 +214,15 @@
     </div>
     <!-- Partner Logo Section End -->
 
+    <div class="overlay">
+        <div class="error-div" id="log_account">
+            <img src="../img/close.svg" class="xs-svg dismiss" style="margin: 0px auto;">
+            <img src="../img/error_forbidden.png">
+            <p>You must be logged in !</p>
+            <a href='login.html' class="btn btn-warning">LOGIN</a>
+        </div>
+    </div>
+
     <!-- Footer Section Begin -->
     <footer class="footer-section">
         <div class="container">
@@ -388,7 +397,7 @@
                                                         { request_type: 'insertpaidproduct', cart_id:user_metadata.cart_id, product_id:deserialized_data[i].product_id ,
                                                         product_price:deserialized_data[i].inv_price, product_qty:deserialized_data[i].prod_qty, date:new Date() },
                                                         {c: insertpaidproduct}
-                                                    );   
+                                                    );
                                                     }
 
                                                 window.alert('Thank you for your purchase!');

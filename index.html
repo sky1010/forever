@@ -314,6 +314,15 @@
         </div>
 
         <div class="overlay">
+            <div class="error-div" id="log_account">
+                <img src="img/close.svg" class="xs-svg dismiss" style="margin: 0px auto;">
+                <img src="img/error_forbidden.png">
+                <p>You must be logged in !</p>
+                <a href='htmlpages/login.html' class="btn btn-dark" style="width: fit-content;margin: auto;">LOGIN</a>
+            </div>
+        </div>
+
+        <div class="overlay">
             <form id="form-edit" method="post" action="./builder/bridge.php?request_type=modify_user" enctype="multipart/form-data" onsubmit="submitForm(this,  {c: updateUser, o: null}); return false;">
                 <img src="img/close.svg" class="xs-svg dismiss">
                 <label for="uploadImage">

@@ -476,5 +476,7 @@
         );
     });
 
+    if(window.sessionStorage.getItem('user_metadata') == null)
+        $(".nav-item a[href='./collection.html']").css('display', 'none');
 
 })(jQuery);

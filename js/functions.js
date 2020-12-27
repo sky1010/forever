@@ -579,7 +579,7 @@ function showProducts(obj, inject_prod_only = false){
                         );
 
                     }else{
-                        console.error('You must login');
+                        $("#log_account").parent().css("display", "flex");
                     }
 
                 });
@@ -1041,7 +1041,7 @@ function renderSpecificProduct(prod_object){
             );
 
         }else{
-            console.error('You must login');
+            $("#log_account").parent().css("display", "flex");
         }
 
     });
@@ -1083,7 +1083,7 @@ function renderRelatedProduct(object){
                 );
 
             }else{
-                console.error('You must login');
+                $("#log_account").parent().css("display", "flex");
             }
 
         });
@@ -1192,7 +1192,7 @@ function build_index(object){
                 );
 
             }else{
-                console.error('You must login');
+                $("#log_account").parent().css("display", "flex");
             }
 
         });
