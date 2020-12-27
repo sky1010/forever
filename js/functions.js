@@ -525,7 +525,7 @@ function showProducts(obj, inject_prod_only = false){
             var pi_pic_node = $('<div></div>').addClass("pi-pic");
             var pi_text_div = $('<div></div>').addClass('pi-text');
             var category_name = $('<div></div>').addClass('catagory-name').text(deserialized_data[i].cat_desc);
-            var product_price = $('<div></div>').addClass('product-price').text("MUR "+deserialized_data[i].inv_price);
+            var product_price = $('<div></div>').addClass('product-price').text("Rs "+deserialized_data[i].inv_price);
             var sale_node = $('<div></div>').addClass('sale pp-sale').text('Sale');
             var ul_node = $('<ul></ul>');
             var li_node_first = $('<li></li>').addClass('w-icon active').append($('<a id= "product_id_'+ deserialized_data[i].product_id+ '" href="#"><i class="icon_bag_alt"></i></a>'));
@@ -1072,7 +1072,7 @@ function renderRelatedProduct(object){
         var pi_pic_node = $('<div></div>').addClass("pi-pic");
         var pi_text_div = $('<div></div>').addClass('pi-text');
         var category_name = $('<div></div>').addClass('catagory-name').text(deserialized_data[i].cat_desc);
-        var product_price = $('<div></div>').addClass('product-price').text("MUR "+deserialized_data[i].inv_price);
+        var product_price = $('<div></div>').addClass('product-price').text("Rs "+deserialized_data[i].inv_price);
         var sale_node = $('<div></div>').addClass('sale pp-sale').text('Sale');
         var ul_node = $('<ul></ul>');
         var li_node_first = $('<li></li>').addClass('w-icon active').append($('<a id= "product_id_'+ deserialized_data[i].product_id+ '" href="#"><i class="icon_bag_alt"></i></a>'));
@@ -1187,7 +1187,7 @@ function build_index(object){
         var pi_pic_node = $('<div></div>').addClass("pi-pic");
         var pi_text_div = $('<div></div>').addClass('pi-text');
         var category_name = $('<div></div>').addClass('catagory-name').text(deserialized_data[i].cat_desc);
-        var product_price = $('<div></div>').addClass('product-price').text("MUR "+deserialized_data[i].inv_price);
+        var product_price = $('<div></div>').addClass('product-price').text("Rs "+deserialized_data[i].inv_price);
         var sale_node = $('<div></div>').addClass('sale pp-sale').text('Sale');
         var ul_node = $('<ul></ul>');
         var li_node_first = $('<li></li>').addClass('w-icon active').append($('<a id= "product_id_'+ deserialized_data[i].product_id+ '" href="#"><i class="icon_bag_alt"></i></a>'));
