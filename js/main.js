@@ -451,7 +451,7 @@
 
     // INDEX
     $("#displaymen").click(function() {
-        $("#hero-img").css('background-image', "url(img/products/man-large.jpg)");
+        $("#hero-img").css('background-image', "url(img/banner-1.jpg)");
         ajax(
             'builder/bridge.php'+"?"+"minimum_price=25&maximum_price=1475&product_size=S, M, L&man=on",
             { request_type: 'search_product'},
@@ -460,7 +460,7 @@
     });
 
     $("#displaywomen").click(function() {
-        $("#hero-img").css('background-image', "url(img/products/women-large.jpg)");
+        $("#hero-img").css('background-image', "url(img/banner-2.jpg)");
         ajax(
             'builder/bridge.php'+"?"+"minimum_price=25&maximum_price=1475&product_size=S, M, L&women=on",
             { request_type: 'search_product'},
@@ -469,7 +469,7 @@
     });
 
     $("#displaykid").click(function() {
-        $("#hero-img").css('background-image', "url(img/products/banner-3.jpg)");
+        $("#hero-img").css('background-image', "url(img/banner-3.jpg)");
         ajax(
             'builder/bridge.php'+"?"+"minimum_price=25&maximum_price=1475&product_size=S, M, L&kid=on",
             { request_type: 'search_product'},
