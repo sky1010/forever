@@ -186,6 +186,9 @@ $(document).ready(function () {
                         { request_type: 'paid_item_list', cart_id:user_metadata.cart_id},
                         {c: paid_item_list}
                     );
+
+                    $('#profile_avatar_collection').css('background-image', `url(${user_metadata.avatar})`);
+                    $('#collection_desc').text(`Here's a collection of what you bought ${user_metadata.username}`);
                 }
                 break;
         default:
@@ -375,7 +378,7 @@ function updateUser(obj){
         session.avatar = split_path.join("/");
     }
 
-    $("#profile_avatar").css("background-image", "url('"+ session.avatar +"')");
+    $("#profile_avatar, #profile_avatar_collection").css("background-image", "url('"+ session.avatar +"')");
     $("#profile_name").text(session.username);
 
     $(".dismiss").click();
@@ -578,10 +581,13 @@ function showProducts(obj, inject_prod_only = false){
                             {c: checkCart, o:[ user_metadata.cart_id ,$(prodID).attr("data-product-id")]}
                         );
 
+                        $("#toast-cart").html('<i class="fa fa-heart" aria-hidden="true"></i>   Added to cart');
+                        $("#toast-cart").fadeIn(500);
+                        setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
+
                     }else{
                         $("#log_account").parent().css("display", "flex");
                     }
-
                 });
 
                 $(li_node_second).find('a').click(function(){
@@ -663,12 +669,10 @@ function showusercart(obj){
                         { request_type: 'cart_delete_product', data:$(prodID).attr("data-product-id"), cart_id:user_metadata.cart_id },
                         {c: showusercart}
                     );
-                    // emptyContent("#shopping_dataset");
-                    // ajax(
-                    //     'builder/bridge.php',
-                    //     { request_type: 'cart_delete_product', data:$(prodID).attr("data-product-id"), cart_id:user_metadata.cart_id },
-                    //     {c: shoppingusercart}
-                    // );
+
+                    $("#toast-cart").html('<i class="fa fa-trash-o" aria-hidden="true"></i> Removed from cart');
+                    $("#toast-cart").fadeIn(500);
+                    setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
                 });
             }else{
                 $("#btn-remove-"+cart_data[i].product_id).click(function(){
@@ -691,6 +695,10 @@ function showusercart(obj){
                         { request_type: 'cart_delete_product', data:$(prodID).attr("data-product-id"), cart_id:user_metadata.cart_id },
                         {c: paymentcart}
                     );
+
+                    $("#toast-cart").html('<i class="fa fa-trash-o" aria-hidden="true"></i> Removed from cart');
+                    $("#toast-cart").fadeIn(500);
+                    setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
                 });
             }
 
@@ -706,7 +714,6 @@ function checkCart(obj, cart_id, prod_id){
     var path = window.location.pathname;
     var page = path.split("/").pop();
     if (page == 'index.html'){
-        console.log(cart_id, prod_id);
         const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
         // console.log(obj);
         if(obj === "[]"){
@@ -729,12 +736,9 @@ function checkCart(obj, cart_id, prod_id){
             );
         }
         }else{
-        console.log(cart_id, prod_id);
         const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
-        // console.log(obj);
         if(obj === "[]"){
             const cart_data = JSON.parse(obj)
-            // console.log('Not exist');
             emptyContent("#cart_dataset");
             ajax(
                 '../builder/bridge.php',
@@ -743,7 +747,6 @@ function checkCart(obj, cart_id, prod_id){
             );
 
         }else{
-            // console.log('exist');
             emptyContent("#cart_dataset");
             ajax(
                 '../builder/bridge.php',
@@ -1191,6 +1194,9 @@ function build_index(object){
                     {c: checkCart, o:[ user_metadata.cart_id ,$(prodID).attr("data-product-id")]}
                 );
 
+                $("#toast-cart").html('<i class="fa fa-heart" aria-hidden="true"></i>   Added to cart');
+                $("#toast-cart").fadeIn(500);
+                setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
             }else{
                 $("#log_account").parent().css("display", "flex");
             }

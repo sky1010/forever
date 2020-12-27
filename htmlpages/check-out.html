@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/index.css" type="text/css">
 </head>
 
 <body>
@@ -223,6 +224,35 @@
         </div>
     </div>
 
+    <div class="overlay">
+        <form id="form-edit" method="post" action="../builder/bridge.php?request_type=modify_user" enctype="multipart/form-data" onsubmit="submitForm(this,  {c: updateUser, o: null}); return false;">
+            <img src="../img/close.svg" class="xs-svg dismiss">
+            <label for="uploadImage">
+                <img src="../uploads/users_avatar/default_avatar.jpg" class="profile-md mb-4 mt-4" id="f-profile">
+            </label>
+            <input type="file" name="user_profile" style="display: none;" id="uploadImage" data-type="none" data-error="">
+            <input type="hidden" name="user_id" style="display: none;" data-type="none" data-error="" id="user_id">
+            <div class="form-row">
+                <input type="email" name="email" placeholder="Email" data-type="email" data-error="Invalid email address">
+            </div>
+            <div class="form-row">
+                <input type="password" name="pass" placeholder="Password" data-type="password" data-error="Invalid password">
+            </div>
+            <div class="form-row">
+                <input type="password" name="confirm_pass" placeholder="Confirm password" data-type="confirm_password" data-error="Password don't match">
+            </div>
+            <div class="form-row">
+                <p class="notice align-right">Do remember your new choices master</p>
+            </div>
+            <div style="display:flex; justify-content:space-evenly; width:100%;">
+                <button type="submit" id="form-register-btn" class="form-btn">New me</button>
+                <button type="button" id="to-profile-page" class="form-btn">Collections</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="toast" id="toast"> <i class="fa fa-heart" aria-hidden="true"></i> Added to cart </div>
+
     <!-- Footer Section Begin -->
     <footer class="footer-section">
         <div class="container">
@@ -280,135 +310,134 @@
     <script src="../js/jquery.slicknav.js"></script>
     <script src="../js/owl.carousel.min.js"></script>
     <script src="../js/functions.js"></script>
-    <script src="../js/main.js"></script>
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
-                                    <script>
-                                        var user_session = JSON.parse(window.sessionStorage.getItem('user_metadata'));
-                                        ajax(
-                                            '../builder/bridge.php',
-                                            { request_type: 'usercart', data:user_session.cart_id },
-                                            {c: renderPaypal}
-                                        );
+    <script>
+        var user_session = JSON.parse(window.sessionStorage.getItem('user_metadata'));
+        ajax(
+            '../builder/bridge.php',
+            { request_type: 'usercart', data:user_session.cart_id },
+            {c: renderPaypal}
+        );
 
-                                    function renderPaypal(object){
-                                        var deserialized_data = JSON.parse(object);
-                                        var product_dataset = [];
+        function renderPaypal(object){
+            var deserialized_data = JSON.parse(object);
+            var product_dataset = [];
 
-                                        for(var i = 0; i < deserialized_data.length; i++){
-                                            product_dataset.push({
-                                                name: deserialized_data[i].prod_name,
-                                                description: deserialized_data[i].prod_desc,
-                                                quantity: deserialized_data[i].prod_qty,
-                                                price: deserialized_data[i].inv_price,
-                                                tax: '0.00',
-                                                sku: "0".repeat(5) + deserialized_data[i].inv_price,
-                                                currency: 'USD'
-                                            });
-                                        }
-                                        paypal.Button.render({
-                                            // Configure environment
-                                            env: 'sandbox',
-                                            client: {
-                                            sandbox: 'demo_sandbox_client_id',
-                                            production: 'demo_production_client_id'
-                                            },
-                                            // Customize button (optional)
-                                            locale: 'en_US',
-                                            style: {
-                                            size: 'small',
-                                            color: 'gold',
-                                            shape: 'pill',
-                                            },
+            for(var i = 0; i < deserialized_data.length; i++){
+                product_dataset.push({
+                    name: deserialized_data[i].prod_name,
+                    description: deserialized_data[i].prod_desc,
+                    quantity: deserialized_data[i].prod_qty,
+                    price: deserialized_data[i].inv_price,
+                    tax: '0.00',
+                    sku: "0".repeat(5) + deserialized_data[i].inv_price,
+                    currency: 'USD'
+                });
+            }
+            paypal.Button.render({
+                // Configure environment
+                env: 'sandbox',
+                client: {
+                sandbox: 'demo_sandbox_client_id',
+                production: 'demo_production_client_id'
+                },
+                // Customize button (optional)
+                locale: 'en_US',
+                style: {
+                size: 'small',
+                color: 'gold',
+                shape: 'pill',
+                },
 
-                                            // Enable Pay Now checkout flow (optional)
-                                            commit: true,
+                // Enable Pay Now checkout flow (optional)
+                commit: true,
 
-                                            // Set up a payment
-                                            payment: function(data, actions) {
-                                            var fullname = $('#fn').val()+' '+$('#ln').val();
-                                            var street = $('#street').val();
-                                            var town = $('#town').val();
-                                            var zip = $('#zip').val();
-                                            var phone = $('#phone').val();
-                                            var amount = $('#total_payment').text().replace( /^\D+/g, '');
-                                            // var totalamount = parseFloat(amount/40);
-                                            return actions.payment.create({
-                                                transactions: [{
-                                                    amount: {
-                                                        total: amount,
-                                                        currency: 'USD',
-                                                        details: {
-                                                        subtotal: amount,
-                                                        tax: '0.00',
-                                                        shipping: '0.00',
-                                                        handling_fee: '0.00',
-                                                        shipping_discount: '0.00',
-                                                        insurance: '0.00'
-                                                        }
-                                                    },
-                                                description: 'The payment transaction description.',
-                                                custom: '90048630024435',
+                // Set up a payment
+                payment: function(data, actions) {
+                var fullname = $('#fn').val()+' '+$('#ln').val();
+                var street = $('#street').val();
+                var town = $('#town').val();
+                var zip = $('#zip').val();
+                var phone = $('#phone').val();
+                var amount = $('#total_payment').text().replace( /^\D+/g, '');
+                // var totalamount = parseFloat(amount/40);
+                return actions.payment.create({
+                    transactions: [{
+                        amount: {
+                            total: amount,
+                            currency: 'USD',
+                            details: {
+                            subtotal: amount,
+                            tax: '0.00',
+                            shipping: '0.00',
+                            handling_fee: '0.00',
+                            shipping_discount: '0.00',
+                            insurance: '0.00'
+                            }
+                        },
+                    description: 'The payment transaction description.',
+                    custom: '90048630024435',
 
-                                                item_list: {
-                                                    items: product_dataset
-                                                    ,
+                    item_list: {
+                        items: product_dataset
+                        ,
 
-                                                    shipping_address: {
-                                                    recipient_name: fullname,
-                                                    line1: street,
-                                                    line2: '',
-                                                    city: town,
-                                                    country_code: 'MU',
-                                                    postal_code: zip,
-                                                    phone: phone,
-                                                    state: 'MU'
-                                                    }
-                                                }
-                                                }],
-                                                note_to_payer: 'Contact us for any questions on your order.'
-                                            });
-                                            },
-                                            // Execute the payment
-                                            onAuthorize: function(data, actions) {
-                                            return actions.payment.execute().then(function() {
-                                                // Show a confirmation message to the buyer
-                                                const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
-                                                    emptyContent("#shopping_dataset");
-                                                    emptyContent("#cart_dataset");
-                                                    ajax(
-                                                        '../builder/bridge.php',
-                                                        { request_type: 'deleteAll', data:user_metadata.cart_id },
-                                                        {c: shoppingusercart}
-                                                    );
-                                                    ajax(
-                                                        '../builder/bridge.php',
-                                                        { request_type: 'deleteAll', data:user_metadata.cart_id },
-                                                        {c: showusercart}
-                                                    );
-                                                    ajax(
-                                                        '../builder/bridge.php',
-                                                        { request_type: 'insertpayment', cart_id:user_metadata.cart_id, date:new Date() ,user_id:user_metadata.user_id, amount:$('#total_payment').text().replace( /^\D+/g, '') },
-                                                        {c: insertpayment}
-                                                    );
+                        shipping_address: {
+                        recipient_name: fullname,
+                        line1: street,
+                        line2: '',
+                        city: town,
+                        country_code: 'MU',
+                        postal_code: zip,
+                        phone: phone,
+                        state: 'MU'
+                        }
+                    }
+                    }],
+                    note_to_payer: 'Contact us for any questions on your order.'
+                });
+                },
+                // Execute the payment
+                onAuthorize: function(data, actions) {
+                return actions.payment.execute().then(function() {
+                    // Show a confirmation message to the buyer
+                    const user_metadata = JSON.parse(window.sessionStorage.getItem("user_metadata"));
+                        emptyContent("#shopping_dataset");
+                        emptyContent("#cart_dataset");
+                        ajax(
+                            '../builder/bridge.php',
+                            { request_type: 'deleteAll', data:user_metadata.cart_id },
+                            {c: shoppingusercart}
+                        );
+                        ajax(
+                            '../builder/bridge.php',
+                            { request_type: 'deleteAll', data:user_metadata.cart_id },
+                            {c: showusercart}
+                        );
+                        ajax(
+                            '../builder/bridge.php',
+                            { request_type: 'insertpayment', cart_id:user_metadata.cart_id, date:new Date() ,user_id:user_metadata.user_id, amount:$('#total_payment').text().replace( /^\D+/g, '') },
+                            {c: insertpayment}
+                        );
 
-                                                    for(var i = 0; i < deserialized_data.length; i++){
-                                                        ajax(
-                                                        '../builder/bridge.php',
-                                                        { request_type: 'insertpaidproduct', cart_id:user_metadata.cart_id, product_id:deserialized_data[i].product_id ,
-                                                        product_price:deserialized_data[i].inv_price, product_qty:deserialized_data[i].prod_qty, date:new Date() },
-                                                        {c: insertpaidproduct}
-                                                    );
-                                                    }
+                        for(var i = 0; i < deserialized_data.length; i++){
+                            ajax(
+                            '../builder/bridge.php',
+                            { request_type: 'insertpaidproduct', cart_id:user_metadata.cart_id, product_id:deserialized_data[i].product_id ,
+                            product_price:deserialized_data[i].inv_price, product_qty:deserialized_data[i].prod_qty, date:new Date() },
+                            {c: insertpaidproduct}
+                        );
+                        }
 
-                                                window.alert('Thank you for your purchase!');
-                                                window.location.href = 'collection.html';
+                    window.alert('Thank you for your purchase!');
+                    window.location.href = 'collection.html';
 
-                                            });
-                                            }
-                                        }, '#paypal-button');
-                                    }
-                                    </script>
-</body>
-
+                });
+                }
+            }, '#paypal-button');
+        }
+        </script>
+        <script src="../js/main.js"></script>
+    </body>
 </html>
 

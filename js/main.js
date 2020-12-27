@@ -434,10 +434,13 @@
     });
     $("#profile_avatar").click(function(){
         $("#form-edit").parent().css("display", "flex");
+        console.log($("#paypal-button"));
+        $("#paypal-button").css('display', 'none');
     });
 
     $(".dismiss").click(function(){
         $(this).parent().parent().css("display", "none");
+        $("#paypal-button").css('display', 'block');
     });
 
     $(".cart-icon").hover(function(){

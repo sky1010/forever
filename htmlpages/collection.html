@@ -115,8 +115,8 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <div class="profile_xl border_outer" data-toggle="tooltip" data-placement="top" title="Profile" id="profile_avatar" style="margin: 60px auto 0px auto;"></div>
-                <h4 style="margin: 60px 0px;">The old you is screaming ... Pills</h4>
+                <div class="profile_xl border_outer" data-toggle="tooltip" data-placement="top" title="Profile" id="profile_avatar_collection" style="margin: 60px auto 0px auto;"></div>
+                <h6 style="margin: 60px 0px;" id="collection_desc"></h6>
             </div>
         </div>
     </div>
@@ -200,6 +200,8 @@
                 </div>
             </div>
         </div>
+
+        <div class="toast-cart" id="toast-cart"> <i class="fa fa-heart" aria-hidden="true"></i> Added to cart </div>
 
         <div class="overlay">
             <form id="form-edit" method="post" action="../builder/bridge.php?request_type=modify_user" enctype="multipart/form-data" onsubmit="submitForm(this,  {c: updateUser, o: null}); return false;">
