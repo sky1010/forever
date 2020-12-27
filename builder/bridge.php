@@ -121,10 +121,20 @@
                 break;
 
         case 'db_insert_product':
-            $target_dir = "./uploads/products/";
-            $target_file = $target_dir.basename($_FILES["product_image"]["name"]);
+            $target_file = "./uploads/products/camera.jpeg";
+            if(!empty($_FILES["product_image"]["tmp_name"])){
+                $target_dir = "./uploads/products/";
+                $target_file = $target_dir.basename($_FILES["product_image"]["name"]);
+            }
             try{
-                if(move_uploaded_file($_FILES["product_image"]["tmp_name"], "../".$target_file)){
+                $trigger_update = true;
+                if(!empty($_FILES["product_image"]["tmp_name"])){
+                    if(!move_uploaded_file($_FILES["product_image"]["tmp_name"], "../".$target_file)){
+                        $trigger_update = false;
+                    }
+                }
+
+                if($trigger_update){
                     $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
                     exec_sql(
@@ -475,17 +485,17 @@
 
                 try{
                     $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-    
+
                     exec_sql(
                         $connection,
                         'INSERT INTO tbl_payment (cart_id,payment_date,payment_amount,status) VALUES (? , ?, ? , ?)',
                         [$_REQUEST['cart_id'], $_REQUEST['date'] ,$_REQUEST['amount'], 'completed']
                     );
-    
-    
-    
+
+
+
                     echo json_encode(['data' => 'success']);
-    
+
                     db_disconnect($connection);
                     http_response_code(200);
                 }catch(Exception $e){
@@ -496,17 +506,17 @@
 
                     try{
                         $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-            
+
                         exec_sql(
                             $connection,
                             'INSERT INTO tbl_paid_product (cart_id,product_id,product_price,prod_qty,prod_status,date_purchased) VALUES (? , ?, ? , ?, ?, ?)',
                             [$_REQUEST['cart_id'], $_REQUEST['product_id'] ,$_REQUEST['product_price'], $_REQUEST['product_qty'] ,'completed', $_REQUEST['date'] ]
                         );
-            
-            
-            
+
+
+
                         echo json_encode(['data' => 'success']);
-            
+
                         db_disconnect($connection);
                         http_response_code(200);
                     }catch(Exception $e){
@@ -519,9 +529,9 @@
                             $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
                             $result = select($connection, 'SELECT * FROM tbl_paid_product pp , tbl_product p WHERE pp.product_id =p.product_id AND prod_status = "completed" AND cart_id = ? ',[$_REQUEST['cart_id']]);
                             db_disconnect($connection);
-        
+
                             echo json_encode($result);
-        
+
                         }catch(Exception $e){
                             http_response_code(400);
                 }
@@ -532,5 +542,5 @@
             http_response_code(400);
             break;
     }
-    
+
 ?>

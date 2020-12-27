@@ -187,7 +187,7 @@ $(document).ready(function () {
                         {c: paid_item_list}
                     );
 
-                    $('#profile_avatar_collection').css('background-image', `url(${user_metadata.avatar})`);
+                    $("#profile_avatar_collection").attr('src', user_metadata.avatar);
                     $('#collection_desc').text(`Here's a collection of what you bought ${user_metadata.username}`);
                 }
                 break;
@@ -378,7 +378,8 @@ function updateUser(obj){
         session.avatar = split_path.join("/");
     }
 
-    $("#profile_avatar, #profile_avatar_collection").css("background-image", "url('"+ session.avatar +"')");
+    $("#profile_avatar").css("background-image", "url('"+ session.avatar +"')");
+    $("#profile_avatar_collection").attr('src', session.avatar);
     $("#profile_name").text(session.username);
 
     $(".dismiss").click();
