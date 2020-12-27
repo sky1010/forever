@@ -1069,6 +1069,9 @@ function renderSpecificProduct(prod_object){
                 {c: checkCart, o:[ user_metadata.cart_id ,$(prodID).attr("id").replace( /^\D+/g, '')]}
             );
 
+            $("#toast-cart").html('<i class="fa fa-heart" aria-hidden="true"></i>   Added to cart');
+            $("#toast-cart").fadeIn(500);
+            setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
         }else{
             var path = "login.html";
             if (window.location.pathname.split("/").pop() == "index.html"){
@@ -1117,6 +1120,9 @@ function renderRelatedProduct(object){
                     {c: checkCart, o:[ user_metadata.cart_id ,$(prodID).attr("data-product-id")]}
                 );
 
+                $("#toast-cart").html('<i class="fa fa-heart" aria-hidden="true"></i>   Added to cart');
+                $("#toast-cart").fadeIn(500);
+                setTimeout(function(){$("#toast-cart").fadeOut(500);}, 2000);
             }else{
                 var path = "login.html";
                 if (window.location.pathname.split("/").pop() == "index.html"){
