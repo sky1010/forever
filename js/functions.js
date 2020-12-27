@@ -1,6 +1,7 @@
-/******************************************
-    FOREVER functions
-******************************************/
+/************************************
+    Author: Srishti & Yakshini
+    Database related helper functions
+*************************************/
 var userSnapshot;
 var productSnapshot;
 var product_ = $("#product_dataset [data-product-id]");
@@ -8,6 +9,10 @@ var product_ = $("#product_dataset [data-product-id]");
 $(document).ready(function () {
     var path = window.location.pathname;
     var page = path.split("/").pop();
+
+    /*
+        For each page, request the related data needed for display
+    */
     switch(page) {
         case 'adminproduct.html':
             ajax(
@@ -24,7 +29,6 @@ $(document).ready(function () {
             );
           break;
         case 'admin.html':
-
             $("#product_submit").css("display", "block");
             $("#product_update").css("display", "none");
 
@@ -236,6 +240,7 @@ function toggle_input_state(input, state, err = null){
     $(input).data('input_valid', true);
     const input_type_exception = ['file', 'checkbox', 'hidden', 'radio', 'color'];
 
+    //if input type is referenced as excluded for validation
     if(!state && !input_type_exception.includes($(input).attr('type'))){
         var error_node = document.createElement('p');
         $(error_node).addClass('error');
@@ -245,6 +250,7 @@ function toggle_input_state(input, state, err = null){
     }
 }
 
+//check if a form is valid
 function form_valid (form){
     var bools = [];
     const input_type_exception = ['file', 'checkbox', 'hidden', 'radio'];
@@ -263,6 +269,7 @@ function form_valid (form){
 
     return true;
 }
+//callback function, displaying all user through DOM injections
 function displayuser(obj){
 	var object = JSON.parse(obj);
 	for(var i = 0; i < object.length; i++){
@@ -325,10 +332,11 @@ function displayuser(obj){
 	}
 	userSnapshot = $("#user_dataset").children();
 }
-
+//empty a related DOM, using detach to prevent the event listener from being destroyed
 function emptyContent(selector){
 	$(selector).children().detach();
 }
+//search function, search a given DOM
 function search(){
     var text = $("#searchBar input").val();
     emptyContent("#user_dataset");
@@ -349,6 +357,7 @@ function search(){
     }
 }
 
+//serialize a form, and send it to the server side through AJAX
 function submitForm(oFormElement, args){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function(){
@@ -365,6 +374,7 @@ function submitForm(oFormElement, args){
     xmlhttp.send(new FormData(oFormElement));
 }
 
+//callback function, updating the user information through DOM
 function updateUser(obj){
     var updated_user = JSON.parse(obj);
     var session = JSON.parse(window.sessionStorage.getItem('user_metadata'));
@@ -385,6 +395,7 @@ function updateUser(obj){
     $(".dismiss").click();
 }
 
+//callback function, displaying the product created through DOM
 function initialize_product(dataset){
     console.log(dataset);
     const deserialized_data = JSON.parse(dataset);
@@ -392,6 +403,8 @@ function initialize_product(dataset){
         window.location.href = "adminproduct.html";
     }
 }
+
+//callback function, displaying the products through DOM
 function displayproducts (obj) {
     const product_data = JSON.parse(obj)
     for(var i = 0; i < product_data.length; i++){
@@ -439,8 +452,10 @@ function displayproducts (obj) {
 
 	}
 	productSnapshot = $("#product_dataset").children();
-  }
-  function searchproduct(){
+}
+
+//search a given product through DOM
+function searchproduct(){
     var text = $("#searchBarproduct input").val();
     emptyContent("#product_dataset");
     for(var index = 0; index < productSnapshot.length; index++){
@@ -498,6 +513,8 @@ function updateproduct(obj){
     });
 
 }
+
+//check if URL has any parameters
 function hasParam(param){
     var field = param;
     var url = window.location.href;
@@ -937,7 +954,7 @@ function searchProduct(search_include){
     }
 }
 
-
+//sortDOM, sort a given DOM
 function sortDom(sorting_option){
     switch(sorting_option){
         case 'none':
@@ -984,6 +1001,7 @@ function sortDom(sorting_option){
     }
 }
 
+//paginate a given DOM
 function paginateDOM(DOM_object, selector, amount){
     var iteration_counter = 1;
     var page_counter = 0;
@@ -1013,6 +1031,7 @@ function paginateDOM(DOM_object, selector, amount){
     return pages_collection;
 }
 
+//delete and insert a new DOM in the specified element
 function reloadDOM(DOM_object, selector, remove_prev = true){
     if(remove_prev) $(selector).children().detach();
 

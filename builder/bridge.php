@@ -1,35 +1,33 @@
 <?php
     /************************************
-        Author: --
-        Date: 20201205
-        Javascript helper functions
+        Author: Srishti & Yakshini
+        Handles Client side ajax request
     *************************************/
     require('handler.php');
 
+    // Database connection
+    // Client ajax request type
     define('HOST', "localhost");
     define('USER', "root");
     define('PASSWORD', "");
     define('DB_NAME', "forever");
     $request = $_REQUEST['request_type'];
 
+    /*
+        Each case represents a request ( Client side ),
+        which is processed in the server side, all database or
+        file handling are handled below.
+    */
     switch ($request) {
-        case 'test_request':
-            try{
-                //[ TODO ]
-                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-                $result = select($connection, 'SELECT * FROM tbl_user', []);
-                db_disconnect($connection);
-
-                echo json_encode($result);
-
-            }catch(Exception $e){
-                http_response_code(400);
-            }
-
-            break;
+        /*
+            Request --> Insert user in the database
+        */
         case 'db_insert_user':
             try{
+                //creates a connection
                 $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+
+                //Inserts the user in the database
                 exec_sql(
                     $connection,
                     'INSERT INTO tbl_user (username, password, email_address, firstname, lastname, country, street_address, postal_code, town, phone_number,account_status, avatar, role) VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -37,126 +35,168 @@
                     $_REQUEST['zipcode'], $_REQUEST['town'], $_REQUEST['number'], 'active', '../uploads/users_avatar/default_avatar.jpg', 'client']
                 );
 
+                //Retreive the inserted user, user_id
                 $user_id = select($connection, 'SELECT user_id FROM tbl_user WHERE username = ?', [$_REQUEST['username']]);
 
+                //Creates a cart for the user using the user_id as foreign key
                 exec_sql(
                     $connection,
                     'INSERT INTO tbl_cart (user_id) VALUES (?)',
                     [$user_id[0]['user_id']]
                 );
 
+                //Select the previously created user
+                //Send the data to the client side as a JSON outstream
                 $result = select($connection, 'SELECT u.*, c.cart_id FROM tbl_user u INNER JOIN tbl_cart c ON u.user_id = c.user_id WHERE username = ?', [$_REQUEST['username']]);
                 echo json_encode($result);
 
+                //Destroy the database connection
                 db_disconnect($connection);
                 http_response_code(200);
             }catch(Exception $e){
+                //return bad http request when error is encountered
                 http_response_code(400);
             }
             break;
+        /*
+            Request --> Retreives the user related data on an attempt to login
+        */
         case 'db_user_login':
             try{
+                //creates a connection, selects the user and send the data as an JSON outstream
                 $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
                 $result = select($connection, 'SELECT u.*, c.cart_id FROM tbl_user u INNER JOIN tbl_cart c ON u.user_id = c.user_id  WHERE username = ? AND password = ? ', [$_REQUEST['username'], $_REQUEST['password']]);
                 echo json_encode($result);
 
+                //destroy database connection
                 db_disconnect($connection);
                 http_response_code(200);
             }catch(Exception $e){
+                //return bad http request when error is encountered
                 http_response_code(400);
             }
             break;
+        /*
+            Request --> Retreive all user
+        */
         case 'allUsers':
-                try{
-                    //[ TODO ]
-                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-                    $result = select($connection, 'SELECT * FROM tbl_user ', []);
-                    db_disconnect($connection);
+            try{
+                //creates a connection, selects the user and send the data as an JSON outstream
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                $result = select($connection, 'SELECT * FROM tbl_user ', []);
+                //destroy database connection
+                db_disconnect($connection);
+                echo json_encode($result);
 
-                    echo json_encode($result);
+            }catch(Exception $e){
+                //return bad http request when error is encountered
+                http_response_code(400);
+            }
 
-                }catch(Exception $e){
-                    http_response_code(400);
-                }
-
-                break;
+            break;
+        /*
+            Request --> Update the status of a user to suspended
+        */
         case 'update_user_suspended':
             try{
+                //creates a connection, selects the user and
                 $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
+                //update user status to suspended
                 exec_sql(
                     $connection,
                     'UPDATE tbl_user SET account_status = "inactive" WHERE user_id = ?',  [$_REQUEST['data']]
                 );
 
+                //retrieve the updated user and send the data as an JSON outstream
                 $result = select($connection, 'SELECT * FROM tbl_user ', []);
                 echo json_encode($result);
-
+                //destroy database connection
                 db_disconnect($connection);
                 http_response_code(200);
             }catch(Exception $e){
+                //return bad http request when error is encountered
                 http_response_code(400);
             }
 
             break;
-
+        /*
+            Request --> Update the status of a user to suspended
+        */
         case 'update_user_approved':
-                try{
-                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+            try{
+                //creates a connection, selects the user
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
-                    exec_sql(
-                        $connection,
-                        'UPDATE tbl_user SET account_status = "active" WHERE user_id = ?',  [$_REQUEST['data']]
-                    );
+                //update user status to suspended
+                exec_sql(
+                    $connection,
+                    'UPDATE tbl_user SET account_status = "active" WHERE user_id = ?',  [$_REQUEST['data']]
+                );
 
-                    $result = select($connection, 'SELECT * FROM tbl_user ', []);
-                    echo json_encode($result);
+                //retrieve the updated user and send the data as an JSON outstream
+                $result = select($connection, 'SELECT * FROM tbl_user ', []);
+                echo json_encode($result);
+                //destroy database connection
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                //return bad http request when error is encountered
+                http_response_code(400);
+            }
 
-                    db_disconnect($connection);
-                    http_response_code(200);
-                }catch(Exception $e){
-                    http_response_code(400);
-                }
-
-                break;
-
+            break;
+        /*
+            Request --> Insert a product in the database
+        */
         case 'db_insert_product':
+            //if no known pictures were sent, use a default one
+            //if pictures metadata were sentm retrieve its basename ( file name )
             $target_file = "./uploads/products/camera.jpeg";
             if(!empty($_FILES["product_image"]["tmp_name"])){
                 $target_dir = "./uploads/products/";
                 $target_file = $target_dir.basename($_FILES["product_image"]["name"]);
             }
             try{
+                //holds the state of the image upload process
                 $trigger_update = true;
                 if(!empty($_FILES["product_image"]["tmp_name"])){
                     if(!move_uploaded_file($_FILES["product_image"]["tmp_name"], "../".$target_file)){
+                        //set the state to false if the image was not uploaded successfully
                         $trigger_update = false;
                     }
                 }
 
+                //if image was uploaded successfully, begin database transactional operations
                 if($trigger_update){
+                    //creates a connection, selects the user
                     $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
+                    //insert the product
                     exec_sql(
                         $connection,
                         'INSERT INTO tbl_product (prod_name, prod_desc, prod_tags, prod_brand, prod_image, prod_age_group,cat_id) VALUES (? , ?, ?, ?, ?, ?, ?)',
                         [$_REQUEST['product_name'], $_REQUEST['product_desc'], $_REQUEST['product_tags'], $_REQUEST['product_brand'] ,$target_file,$_REQUEST['product_gender_cat'] , $_REQUEST['category'] ]
                     );
 
+                    //retreive previously inserted product
                     $result = select($connection, 'SELECT product_id FROM tbl_product WHERE prod_name = ?', [$_REQUEST['product_name']]);
-                    // echo json_encode($result);
 
+                    //insert the product metadata in the inventory
                     exec_sql(
                         $connection,
                         'INSERT INTO tbl_inventory (inv_color, inv_size, inv_qoh, inv_price, product_id) VALUES (? , ?, ?, ?, ?)',
                         [$_REQUEST['product_color'], array_key_exists('clothing_size', $_REQUEST)?$_REQUEST['clothing_size']:'S', $_REQUEST['product_qty'], $_REQUEST['product_price'] , $result[0]['product_id'] ]
                     );
-                    echo json_encode(['data' => 'success']);
 
+                    //send a success flag as an JSON outstream
+                    echo json_encode(['data' => 'success']);
+                    //destroy database connection
                     db_disconnect($connection);
                     http_response_code(200);
                 }
             }catch(Exception $e){
+                //return bad http request when error is encountered
                 http_response_code(400);
             }
             break;
@@ -289,23 +329,22 @@
                 http_response_code(400);
             }
             break;
-            case 'usercart':
-                try{
-                    //[ TODO ]
-                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+        case 'usercart':
+            try{
+                //[ TODO ]
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
-                    $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['data']]);
+                $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['data']]);
 
-                    echo json_encode($result);
+                echo json_encode($result);
 
-                    db_disconnect($connection);
-                    http_response_code(200);
-                }catch(Exception $e){
-                    http_response_code(400);
-                }
-                break;
-            case 'addtocart':
-
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
+        case 'addtocart':
             try{
                 $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
@@ -326,60 +365,60 @@
                 http_response_code(400);
             }
             break;
-            case 'cart_delete_product':
-                try{
-                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+        case 'cart_delete_product':
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
-                    exec_sql(
-                        $connection,
-                        'DELETE FROM tbl_product_cart WHERE product_id = ?',  [$_REQUEST['data']]
-                    );
+                exec_sql(
+                    $connection,
+                    'DELETE FROM tbl_product_cart WHERE product_id = ?',  [$_REQUEST['data']]
+                );
 
 
-                    $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['cart_id']]);
-                    echo json_encode($result);
+                $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['cart_id']]);
+                echo json_encode($result);
 
-                    db_disconnect($connection);
-                    http_response_code(200);
-                }catch(Exception $e){
-                    http_response_code(400);
-                }
-                break;
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
         case 'checkCart':
-                    try{
-                        $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
-                        $result = select($connection, 'SELECT * FROM tbl_product_cart  WHERE cart_id = ? AND product_id = ?', [$_REQUEST['cart_id'],$_REQUEST['prod_id']]);
-                        echo json_encode($result);
+                $result = select($connection, 'SELECT * FROM tbl_product_cart  WHERE cart_id = ? AND product_id = ?', [$_REQUEST['cart_id'],$_REQUEST['prod_id']]);
+                echo json_encode($result);
 
-                        db_disconnect($connection);
-                        http_response_code(200);
-                    }catch(Exception $e){
-                        http_response_code(400);
-                    }
-                    break;
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
         case 'IncrementCart':
-                        try{
-                            $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
-                            $prod_qty = select($connection, 'SELECT prod_qty FROM tbl_product_cart  WHERE cart_id = ? AND product_id = ?', [$_REQUEST['cart_id'],$_REQUEST['prod_id']]);
-                            $prod_inc = $prod_qty[0]['prod_qty'] +1;
-                            exec_sql(
-                                $connection,
-                                'UPDATE tbl_product_cart SET prod_qty = ? WHERE cart_id = ? AND product_id = ?',
-                                [$prod_inc, $_REQUEST['cart_id'], $_REQUEST['prod_id']]
-                            );
+                $prod_qty = select($connection, 'SELECT prod_qty FROM tbl_product_cart  WHERE cart_id = ? AND product_id = ?', [$_REQUEST['cart_id'],$_REQUEST['prod_id']]);
+                $prod_inc = $prod_qty[0]['prod_qty'] +1;
+                exec_sql(
+                    $connection,
+                    'UPDATE tbl_product_cart SET prod_qty = ? WHERE cart_id = ? AND product_id = ?',
+                    [$prod_inc, $_REQUEST['cart_id'], $_REQUEST['prod_id']]
+                );
 
 
 
-                            $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['cart_id']]);
-                            echo json_encode($result);
+                $result = select($connection, 'SELECT * FROM tbl_cart c , tbl_product p ,tbl_product_cart pc, tbl_inventory i WHERE c.cart_id = pc.cart_id AND p.product_id = pc.product_id AND p.product_id = i.product_id AND c.cart_id = ?', [$_REQUEST['cart_id']]);
+                echo json_encode($result);
 
-                            db_disconnect($connection);
-                            http_response_code(200);
-                        }catch(Exception $e){
-                            http_response_code(400);
-                        }
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
         break;
 
         case 'IncrementShoppingCart':
@@ -424,21 +463,20 @@
             }
             break;
 
-            case 'fetchuserpayment':
-                try{
-                    //[ TODO ]
-                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-                    $result = select($connection, 'SELECT * FROM tbl_user WHERE user_id = ? ',[$_REQUEST['data']]);
-                    db_disconnect($connection);
+        case 'fetchuserpayment':
+            try{
+                //[ TODO ]
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+                $result = select($connection, 'SELECT * FROM tbl_user WHERE user_id = ? ',[$_REQUEST['data']]);
+                db_disconnect($connection);
 
-                    echo json_encode($result);
+                echo json_encode($result);
 
-                }catch(Exception $e){
-                    http_response_code(400);
-                }
+            }catch(Exception $e){
+                http_response_code(400);
+            }
 
-        break;
-
+            break;
         case 'search_product':
             $keys = array_keys($_REQUEST);
             $arr = null;
@@ -481,60 +519,59 @@
 
             break;
 
-            case 'insertpayment':
+        case 'insertpayment':
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
 
-                try{
-                    $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-
-                    exec_sql(
-                        $connection,
-                        'INSERT INTO tbl_payment (cart_id,payment_date,payment_amount,status) VALUES (? , ?, ? , ?)',
-                        [$_REQUEST['cart_id'], $_REQUEST['date'] ,$_REQUEST['amount'], 'completed']
-                    );
-
+                exec_sql(
+                    $connection,
+                    'INSERT INTO tbl_payment (cart_id,payment_date,payment_amount,status) VALUES (? , ?, ? , ?)',
+                    [$_REQUEST['cart_id'], $_REQUEST['date'] ,$_REQUEST['amount'], 'completed']
+                );
 
 
-                    echo json_encode(['data' => 'success']);
 
-                    db_disconnect($connection);
-                    http_response_code(200);
-                }catch(Exception $e){
-                    http_response_code(400);
-                }
-                break;
-                case 'insertpaidproduct':
+                echo json_encode(['data' => 'success']);
 
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
+        case 'insertpaidproduct':
+
+            try{
+                $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
+
+                exec_sql(
+                    $connection,
+                    'INSERT INTO tbl_paid_product (cart_id,product_id,product_price,prod_qty,prod_status,date_purchased) VALUES (? , ?, ? , ?, ?, ?)',
+                    [$_REQUEST['cart_id'], $_REQUEST['product_id'] ,$_REQUEST['product_price'], $_REQUEST['product_qty'] ,'completed', $_REQUEST['date'] ]
+                );
+
+
+
+                echo json_encode(['data' => 'success']);
+
+                db_disconnect($connection);
+                http_response_code(200);
+            }catch(Exception $e){
+                http_response_code(400);
+            }
+            break;
+        case 'paid_item_list':
                     try{
+                        //[ TODO ]
                         $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-
-                        exec_sql(
-                            $connection,
-                            'INSERT INTO tbl_paid_product (cart_id,product_id,product_price,prod_qty,prod_status,date_purchased) VALUES (? , ?, ? , ?, ?, ?)',
-                            [$_REQUEST['cart_id'], $_REQUEST['product_id'] ,$_REQUEST['product_price'], $_REQUEST['product_qty'] ,'completed', $_REQUEST['date'] ]
-                        );
-
-
-
-                        echo json_encode(['data' => 'success']);
-
+                        $result = select($connection, 'SELECT * FROM tbl_paid_product pp , tbl_product p WHERE pp.product_id =p.product_id AND prod_status = "completed" AND cart_id = ? ',[$_REQUEST['cart_id']]);
                         db_disconnect($connection);
-                        http_response_code(200);
+
+                        echo json_encode($result);
+
                     }catch(Exception $e){
                         http_response_code(400);
-                    }
-                    break;
-            case 'paid_item_list':
-                        try{
-                            //[ TODO ]
-                            $connection = db_connect(HOST, USER, PASSWORD, DB_NAME);
-                            $result = select($connection, 'SELECT * FROM tbl_paid_product pp , tbl_product p WHERE pp.product_id =p.product_id AND prod_status = "completed" AND cart_id = ? ',[$_REQUEST['cart_id']]);
-                            db_disconnect($connection);
-
-                            echo json_encode($result);
-
-                        }catch(Exception $e){
-                            http_response_code(400);
-                }
+            }
             break;
         default:
 
