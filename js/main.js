@@ -319,6 +319,7 @@
 
             if(user_metadata.account_status == 'active'){
                 $('#profile_avatar').css('display', 'block');
+                $(".nav-right").css('display', 'block');
                 window.sessionStorage.setItem("user_metadata", JSON.stringify(user_metadata));
                 const path = (user_metadata.role == 'client')?"../htmlpages/shop.html":"../htmlpages/admin/admin.html";
                 window.location.href = path;
@@ -476,7 +477,10 @@
         );
     });
 
-    if(window.sessionStorage.getItem('user_metadata') == null)
+    if(window.sessionStorage.getItem('user_metadata') == null){
         $(".nav-item a[href='./collection.html']").css('display', 'none');
+        $("#profile_avatar").css('display', 'none');
+        $(".nav-right").css('display', 'none');
+    }
 
 })(jQuery);
